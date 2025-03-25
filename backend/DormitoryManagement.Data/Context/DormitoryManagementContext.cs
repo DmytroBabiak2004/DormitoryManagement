@@ -1,10 +1,15 @@
 ﻿using DormitoryManagement.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DormitoryManagement.Data.Context
 {
-    public class DormitoryManagementContext : DbContext
+    public class DormitoryManagementContext : IdentityDbContext<IdentityUser>
+
     {
+        public DormitoryManagementContext(DbContextOptions<DormitoryManagementContext> options) : base(options) { }     
+        
         public DbSet<Student> Students { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Registration> Registrations { get; set; }
@@ -16,16 +21,10 @@ namespace DormitoryManagement.Data.Context
         public DbSet<TableType> TableTypes { get; set; }
         public DbSet<MattressType> MattressTypes { get; set; }
 
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=DormitoryManagerDB;Trusted_Connection=True;");
-
-            base.OnConfiguring(optionsBuilder);
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Student>()
                 .HasKey(n => n.StudentNumber);
 

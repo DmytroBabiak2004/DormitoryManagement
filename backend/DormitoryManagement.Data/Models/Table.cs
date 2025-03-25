@@ -7,6 +7,6 @@
         public TableType Type { get; set; }
         public string RoomNumber { get; set; }
 
-        public Room Room { get; set; }
+        public Room? Room { get; set; }
     }
 }

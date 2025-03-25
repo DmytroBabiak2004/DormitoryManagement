@@ -8,6 +8,6 @@ namespace DormitoryManagement.Data.Models
         public Condition Condition { get; set; }
         public ChairType Type { get; set; }
         public string RoomNumber { get; set; }
-        public Room Room { get; set; }
+        public Room? Room { get; set; }
     }
 }

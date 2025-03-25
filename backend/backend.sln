@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend", "backend\backend.csproj", "{163C127E-BAA1-407E-845C-C4D60C1B8903}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DormitoryManagement.Data", "DormitoryManagement.Data\DormitoryManagement.Data.csproj", "{C49F8E09-21ED-4CD1-81F4-7D6BAFC1DEA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DormitoryManagement.Api", "DormitoryManagement.Api\DormitoryManagement.Api.csproj", "{410B90B1-55C0-40C2-B9CD-2C4CA4D60BB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C49F8E09-21ED-4CD1-81F4-7D6BAFC1DEA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C49F8E09-21ED-4CD1-81F4-7D6BAFC1DEA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C49F8E09-21ED-4CD1-81F4-7D6BAFC1DEA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{410B90B1-55C0-40C2-B9CD-2C4CA4D60BB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{410B90B1-55C0-40C2-B9CD-2C4CA4D60BB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{410B90B1-55C0-40C2-B9CD-2C4CA4D60BB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{410B90B1-55C0-40C2-B9CD-2C4CA4D60BB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
