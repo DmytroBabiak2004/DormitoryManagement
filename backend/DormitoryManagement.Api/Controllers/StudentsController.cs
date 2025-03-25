@@ -33,7 +33,7 @@ namespace DormitoryManagement.Api.Controllers
             return Ok(students);
         }
 
-        // POST: api/employees
+        // POST: api/students
         [HttpPost]
         public IActionResult CreateStudent([FromBody] Student student)
         {
@@ -46,9 +46,9 @@ namespace DormitoryManagement.Api.Controllers
             return CreatedAtAction(nameof(GetStudents), new { studentNumber = student.StudentNumber }, student);
         }
 
-        // DELETE: api/employees/{id}
+        // DELETE: api/students/{StudentNumber}
         [HttpDelete("{StudentNumber}")]
-        public IActionResult DeleteEmployee(int StudentNumber)
+        public IActionResult DeleteStudent(int StudentNumber)
         {
             var student = _context.Students.Find(StudentNumber);
             if (student == null)
