@@ -2,9 +2,11 @@
 using DormitoryManagement.Data.Context;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DormitoryManagement.Api.Controllers
 {
+    [Authorize(Roles = "Commandant,Castelian")]
     [ApiController]
     [Route("api/[controller]")]
     public class StudentsInRoomController : ControllerBase

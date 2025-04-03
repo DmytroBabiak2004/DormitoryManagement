@@ -1,9 +1,11 @@
 ﻿using DormitoryManagement.Data.Context;
 using DormitoryManagement.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DormitoryManagement.Api.Controllers
 {
+    [Authorize(Roles = "Commandant,Castelian")]
     [ApiController]
     [Route("api/[controller]")]
     public class TablesController : ControllerBase
@@ -15,6 +17,7 @@ namespace DormitoryManagement.Api.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Student")]
         [HttpGet]
         public IActionResult GetTables()
         {

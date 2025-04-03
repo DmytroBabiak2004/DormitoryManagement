@@ -2,13 +2,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+
 using System.Text;
 using DormitoryManagement.Data.Context;
-using DormitoryManagement.Api;// Твій DbContext
+using DormitoryManagement.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Додаємо CORS
 builder.Services.AddCors(options =>
 {
     // Політика для розробки (дозволяє все)
@@ -31,32 +32,7 @@ builder.Services.AddCors(options =>
 // Додаємо сервіси
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "Dormitory API", Version = "v1" });
-    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-    {
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Please enter JWT with Bearer into field",
-        Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
-    });
-});
+builder.Services.AddSwaggerGen();
 
 // Налаштування DbContext
 var connectionString = builder.Configuration.GetConnectionString("DormitoryManagementDb");
@@ -85,11 +61,11 @@ if (app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
     });
-    app.UseCors("AllowAll"); // У розробці дозволяємо все
+    app.UseCors("AllowAll"); 
 }
 else
 {
-    app.UseCors("AllowSpecificOrigin"); // У продакшені обмежуємо
+    app.UseCors("AllowSpecificOrigin"); 
 }
 
 app.UseHttpsRedirection();
