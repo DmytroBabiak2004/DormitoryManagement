@@ -1,0 +1,26 @@
+<div class="table-container">
+  <table class="responsive-table">
+    <thead>
+    <tr>
+      <th>Cтудент</th>
+      <th>Кімнати</th>
+      <th>Дата заселення</th>
+      <th>Орієнтовна дата виселення</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of data" [class.expanded]="item.expanded">
+      <td class="name-cell" data-label="Cтудент:">{{ item.studentNumber}}</td>
+      <td class="detail-cell" data-label="Кімнати:">{{ item.roomNumber}}</td>
+      <td class="detail-cell" data-label="Заселення:">{{ item.checkInDate }}</td>
+      <td class="detail-cell" data-label="Виселення:">{{ item.checkOutDate }} </td>
+
+      <td class="action-cell">
+        <button (click)="toggleDetails(item)" class="details-btn">
+          {{ item.expanded ? 'Приховати' : 'Деталі' }}
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

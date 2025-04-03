@@ -1,0 +1,204 @@
+/* Додаємо змінні для кольорів */
+:root {
+  --black: #000;
+  --white: #fff;
+  --green: #4a74c3;
+  --dark-green: #38509f;
+  --light-gray: #f5f5f5;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: linear-gradient(135deg, var(--white) 0%, #f8f8f8 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+  margin: 15px 0;
+}
+
+.responsive-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Roboto', sans-serif;
+}
+
+th, td {
+  padding: 12px; /* Було 18px */
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 13px; /* Було 14px і 16px */
+}
+
+th {
+  background: linear-gradient(to right, var(--black), #333);
+  color: var(--white);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: sticky;
+  top: 0;
+}
+
+tr {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+tr:nth-child(even) {
+  background-color: var(--light-gray);
+}
+
+tr:hover {
+  background-color: rgba(139, 195, 74, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.details-btn {
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  padding: 6px 14px; /* Було 10px 20px */
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px; /* Було 14px */
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(139, 195, 74, 0.3);
+}
+
+.details-btn:hover {
+  background: var(--dark-green);
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px rgba(139, 195, 74, 0.5);
+}
+
+.details-btn:active {
+  transform: scale(0.98);
+}
+
+/* Медіа-запит для малих екранів */
+@media (max-width: 900px) {
+  th, td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .table-container {
+    margin: 10px 0;
+  }
+
+  .details-btn {
+    padding: 5px 12px;
+    font-size: 11px;
+  }
+
+  tr {
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 700px) {
+  thead {
+    display: none;
+  }
+
+  tbody {
+    display: block;
+  }
+
+  .table-container {
+    padding: 0;
+  }
+
+  tr {
+    display: block;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    background: var(--white);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  tr.expanded {
+    border-left: 3px solid var(--green);
+  }
+
+  td {
+    display: block;
+    padding: 10px;
+    font-size: 14px; /* Було 15px */
+  }
+
+  .name-cell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 16px; /* Було 18px */
+    background: linear-gradient(to right, var(--black), #222);
+    color: var(--white);
+    padding: 10px; /* Було 20px */
+    border-bottom: 2px solid var(--green);
+  }
+
+  .detail-cell {
+    display: none;
+    color: var(--black);
+    font-size: 13px;
+    background: var(--light-gray);
+    padding-left: 12px;
+  }
+
+  .action-cell {
+    display: block;
+    padding: 0 12px 12px 12px;
+  }
+
+  tr.expanded .detail-cell {
+    display: block;
+    animation: slideDown 0.3s ease;
+  }
+
+  .detail-cell:before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: var(--green);
+    margin-right: 8px;
+  }
+}
+
+/* Анімація для розкриття */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Для великих екранів */
+@media (min-width: 701px) {
+  .details-btn {
+    display: none;
+  }
+
+  .detail-cell {
+    display: table-cell !important;
+  }
+
+  .detail-cell:before {
+    content: none;
+  }
+
+  .name-cell, .action-cell {
+    display: table-cell;
+  }
+}
+

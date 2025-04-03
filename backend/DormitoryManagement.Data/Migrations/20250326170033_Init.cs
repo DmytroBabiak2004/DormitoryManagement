@@ -108,6 +108,7 @@ namespace DormitoryManagement.Data.Migrations
                     StudentNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gender = table.Column<bool>(type: "bit", nullable: true),
                     BirthDate = table.Column<DateOnly>(type: "date", nullable: true)
                 },

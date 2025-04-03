@@ -1,0 +1,26 @@
+<div class="table-container">
+  <table class="responsive-table">
+    <thead>
+    <tr>
+      <th>Серійний номер</th>
+      <th>Стан</th>
+      <th>Тип</th>
+      <th>Номер cтуденського</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let item of data" [class.expanded]="item.expanded">
+      <td class="name-cell" data-label="Серійний номер:">{{ item.serialNumber}}</td>
+      <td class="detail-cell" data-label="Стан:">{{ item.condition }}</td>
+      <td class="detail-cell" data-label="Тип:">{{ item.type }}</td>
+      <td class="detail-cell" data-label="Номер кімнати:">{{ item.studentNumber}}</td>
+      <td class="action-cell">
+        <button (click)="toggleDetails(item)" class="details-btn">
+          {{ item.expanded ? 'Приховати' : 'Деталі' }}
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -25,6 +25,7 @@ namespace DormitoryManagement.Api.Controllers
                     s.StudentNumber,
                     s.FirstName,
                     s.LastName,
+                    s.Phone,
                     s.Gender,
                     s.BirthDate
                 })

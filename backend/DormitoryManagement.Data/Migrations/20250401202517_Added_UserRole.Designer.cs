@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DormitoryManagement.Data.Migrations
 {
     [DbContext(typeof(DormitoryManagementContext))]
-    [Migration("20250325094429_Init")]
-    partial class Init
+    [Migration("20250401202517_Added_UserRole")]
+    partial class Added_UserRole
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -199,6 +199,10 @@ namespace DormitoryManagement.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("StudentNumber");
 
                     b.ToTable("Students");
@@ -275,6 +279,26 @@ namespace DormitoryManagement.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            Name = "Commandant",
+                            NormalizedName = "COMMANDANT"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            Name = "Castelian",
+                            NormalizedName = "CASTELIAN"
+                        },
+                        new
+                        {
+                            Id = "3",
+                            Name = "Student",
+                            NormalizedName = "STUDENT"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -1,0 +1,124 @@
+/* Загальні стилі */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif; /* Сучасний шрифт */
+  background-color: #f0f2f5;
+  overflow-x: hidden;
+}
+
+/* Геройська секція */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: url('/assets/img/background.jpg') no-repeat center center/cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Оверлей з градієнтом */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 20, 60, 0.85) 0%, rgba(20, 40, 100, 0.65) 100%);
+  z-index: 1;
+}
+
+/* Контейнер контенту */
+.content-wrapper {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 20px;
+  max-width: 800px;
+}
+
+/* Стилі для заголовка */
+.title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  animation: fadeInDown 1s ease-out;
+}
+
+/* Стилі для підзаголовка */
+.subtitle {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: #e0e0e0;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  animation: fadeInUp 1s ease-out 0.3s;
+  animation-fill-mode: both;
+}
+
+/* Кнопка CTA */
+.cta-button {
+  padding: 12px 30px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(90deg, #007bff, #00ddeb);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeInUp 1s ease-out 0.6s;
+  animation-fill-mode: both;
+}
+
+.cta-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 123, 255, 0.4);
+}
+
+/* Анімації */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+  }
+  .subtitle {
+    font-size: 1.2rem;
+  }
+  .cta-button {
+    padding: 10px 25px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2rem;
+  }
+  .subtitle {
+    font-size: 1rem;
+  }
+}
