@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using DormitoryManagement.Data.Context; // Твій DbContext
+using DormitoryManagement.Data.Context;
+using DormitoryManagement.Api;// Твій DbContext
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,49 +74,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<DormitoryManagementContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.UseSecurityTokenValidators = true;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
-    options.Events = new JwtBearerEvents
-    {
-        OnAuthenticationFailed = context =>
-        {
-            Console.WriteLine("Authentication failed: " + context.Exception.Message);
-            return Task.CompletedTask;
-        },
-        OnMessageReceived = context =>
-        {
-            // Отримуємо заголовок Authorization з запиту
-            var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-
-            if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-            {
-                // Видаляємо "Bearer " і отримуємо чистий токен
-                var token = authHeader.Replace(" ", "");
-                // Встановлюємо токен для подальшої обробки
-                context.Token = token;
-            }
-
-            return Task.CompletedTask;
-        }
-    };
-});
-
+builder.Services.ConfigAuthentication(builder.Configuration);
 var app = builder.Build();
 
 // Налаштування pipeline

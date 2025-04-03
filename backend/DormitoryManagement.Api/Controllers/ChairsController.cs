@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DormitoryManagement.Data.Context;
 using DormitoryManagement.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DormitoryManagement.Api.Controllers
 {
@@ -15,6 +16,7 @@ namespace DormitoryManagement.Api.Controllers
             _context = context;
         }
 
+        [Authorize(Roles ="Student")]
         [HttpGet]
         public IActionResult GetChairs()
         {
