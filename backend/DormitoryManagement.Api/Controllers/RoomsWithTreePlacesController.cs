@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DormitoryManagement.Api.Controllers
 {
-    [Authorize(Roles = "Commandant,Castelian,Student")]
     [ApiController]
     [Route("api/[controller]")]
     public class RoomsWithFreePlacesController : ControllerBase
@@ -16,7 +15,7 @@ namespace DormitoryManagement.Api.Controllers
         {
             _context = context;
         }
-
+        [Authorize(Roles = "Commandant,Castelian,Student")]
         [HttpGet]
         public async Task<IActionResult> GetRoomsWithFreePlaces()
         {

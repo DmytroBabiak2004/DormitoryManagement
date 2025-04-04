@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DormitoryManagement.Api.Controllers
 {
-    [Authorize(Roles = "Commandant,Castelian")]
+   
     [ApiController]
     [Route("api/[controller]")]
     public class FurnitureController : ControllerBase
@@ -17,7 +17,7 @@ namespace DormitoryManagement.Api.Controllers
         {
             _context = context;
         }
-
+        [Authorize(Roles = "Commandant,Castelian")]
         [HttpGet("{roomNumber}")]
         public async Task<IActionResult> GetFurnitureInRoom(string roomNumber)
         {

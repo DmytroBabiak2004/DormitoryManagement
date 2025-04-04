@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DormitoryManagement.Api.Controllers
 {
-    [Authorize(Roles = "Commandant,Castelian")]
     [ApiController]
     [Route("api/[controller]")]
     public class ChairsController : ControllerBase
@@ -17,14 +16,14 @@ namespace DormitoryManagement.Api.Controllers
             _context = context;
         }
 
-        [Authorize(Roles ="Student")]
+        [Authorize(Roles = "Commandant,Castelian,Student")]
         [HttpGet]
         public IActionResult GetChairs()
         {
             var chairs = _context.Chairs.ToList();
             return Ok(chairs);
         }
-
+        [Authorize(Roles = "Commandant,Castelian")]
         [HttpPost]
         public IActionResult CreateChair([FromBody] Chair chair)
         {
@@ -36,7 +35,7 @@ namespace DormitoryManagement.Api.Controllers
 
             return CreatedAtAction(nameof(GetChairs), new { serialNumber = chair.SerialNumber }, chair);
         }
-
+        [Authorize(Roles = "Commandant,Castelian")]
         [HttpDelete("{serialNumber}")]
         public IActionResult DeleteChair(int serialNumber)
         {

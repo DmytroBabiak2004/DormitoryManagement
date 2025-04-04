@@ -16,14 +16,14 @@ namespace DormitoryManagement.Api.Controllers
         {
             _context = context;
         }
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Commandant,Castelian,Student")]
         [HttpGet]
         public IActionResult GetMattresses()
         {
             var mattresses = _context.Mattresses.ToList();
             return Ok(mattresses);
         }
-
+        [Authorize(Roles = "Commandant,Castelian")]
         [HttpPost]
         public IActionResult CreateMattress([FromBody] Mattress mattress)
         {
@@ -35,7 +35,7 @@ namespace DormitoryManagement.Api.Controllers
 
             return CreatedAtAction(nameof(GetMattresses), new { serialNumber = mattress.SerialNumber }, mattress);
         }
-
+        [Authorize(Roles = "Commandant,Castelian")]
         [HttpDelete("{serialNumber}")]
         public IActionResult DeleteMattress(int serialNumber)
         {

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DormitoryManagement.Api.Controllers
 {
-    [Authorize(Roles = "Commandant,Castelian")]
     [ApiController]
     [Route("api/[controller]")]
     public class RoomsController : ControllerBase
@@ -17,7 +16,7 @@ namespace DormitoryManagement.Api.Controllers
             _context = context;
         }
 
-        // GET: api/rooms
+        [Authorize(Roles = "Commandant,Castelian,Student")]
         [HttpGet]
         public IActionResult GetRooms()
         {
@@ -32,7 +31,7 @@ namespace DormitoryManagement.Api.Controllers
             return Ok(rooms);
         }
 
-        // POST: api/rooms
+        [Authorize(Roles = "Commandant")]
         [HttpPost]
         public IActionResult CreateRoom([FromBody] Room room)
         {
@@ -45,7 +44,7 @@ namespace DormitoryManagement.Api.Controllers
             return CreatedAtAction(nameof(GetRooms), new { roomNumber = room.RoomNumber }, room);
         }
 
-        // DELETE: api/rooms/{roomNumber}
+        [Authorize(Roles = "Commandant")]
         [HttpDelete("{RoomNumber}")]
         public IActionResult DeleteRoom(int RoomNumber)
         {

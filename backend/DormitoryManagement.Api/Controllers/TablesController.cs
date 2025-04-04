@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DormitoryManagement.Api.Controllers
 {
-    [Authorize(Roles = "Commandant,Castelian")]
     [ApiController]
     [Route("api/[controller]")]
     public class TablesController : ControllerBase
@@ -24,7 +23,7 @@ namespace DormitoryManagement.Api.Controllers
             var tables = _context.Tables.ToList();
             return Ok(tables);
         }
-
+        [Authorize(Roles = "Commandant,Castelian")]
         [HttpPost]
         public IActionResult CreateTable([FromBody] Table table)
         {
@@ -36,7 +35,7 @@ namespace DormitoryManagement.Api.Controllers
 
             return CreatedAtAction(nameof(GetTables), new { serialNumber = table.SerialNumber }, table);
         }
-
+        [Authorize(Roles = "Commandant,Castelian")]
         [HttpDelete("{serialNumber}")]
         public IActionResult DeleteTable(int serialNumber)
         {
