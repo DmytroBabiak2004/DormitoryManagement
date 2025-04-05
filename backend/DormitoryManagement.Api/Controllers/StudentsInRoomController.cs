@@ -18,7 +18,7 @@ namespace DormitoryManagement.Api.Controllers
         }
         [Authorize(Roles = "Commandant,Castelian")]
         [HttpGet("{roomNumber}")]
-        public async Task<IActionResult> GetStudentsInRoom(string roomNumber)
+        public async Task<IActionResult> GetStudentsInRoom(string roomNumber, int page = 1, int pageSize = 10)
         {
             try
             {
@@ -35,16 +35,6 @@ namespace DormitoryManagement.Api.Controllers
 
                         using (var reader = await command.ExecuteReaderAsync())
                         {
-                            if (!reader.HasRows)
-                            {
-                                return Ok(new
-                                {
-                                    status = "success",
-                                    message = $"No students found in room {roomNumber}",
-                                    data = studentsList
-                                });
-                            }
-
                             while (await reader.ReadAsync())
                             {
                                 studentsList.Add(new
@@ -58,10 +48,22 @@ namespace DormitoryManagement.Api.Controllers
                     }
                 }
 
+                var total = studentsList.Count;
+                if (page < 1) page = 1;
+                if (pageSize < 1) pageSize = 10;
+
+                var paginatedStudents = studentsList
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
                 return Ok(new
                 {
                     status = "success",
-                    data = studentsList
+                    data = paginatedStudents,
+                    total,
+                    currentPage = page,
+                    pageSize
                 });
             }
             catch (Exception ex)
@@ -69,5 +71,6 @@ namespace DormitoryManagement.Api.Controllers
                 return BadRequest(new { error = "Error retrieving students data", message = ex.Message });
             }
         }
+
     }
 }

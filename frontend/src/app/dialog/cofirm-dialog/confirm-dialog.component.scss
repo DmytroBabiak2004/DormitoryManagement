@@ -1,0 +1,97 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.order-box {
+  font-family: 'Roboto', sans-serif;
+  background: #ffffff;
+  padding: 0 15px 0 15px;
+  width: 400px;
+  text-align: center;
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+  border-radius: 5px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  pointer-events: auto; /* Дозволяє кліки всередині order-box */
+}
+
+.modal-overlay {
+  pointer-events: all; /* Дозволяє кліки на overlay */
+}
+
+.order-box h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-transform: uppercase;
+  background: #000000;
+  margin-top: 0;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.order-box p {
+  font-size: 16px;
+  color: #000000;
+  margin: 55px 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  width: calc(100% + 30px);
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.actions .cancel-btn {
+  padding: 10px 20px;
+  font-size: 15px;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  flex: 1;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.actions .cancel-btn:hover {
+  background: #ff0000;
+  transform: translateY(-2px);
+}
+
+.actions .submit-btn {
+  padding: 10px 20px;
+  font-size: 15px;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  flex: 1;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.actions .submit-btn:hover {
+  background: #39bc2b;
+  transform: translateY(-2px);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

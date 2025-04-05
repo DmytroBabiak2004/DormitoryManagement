@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
-import {ResponsiveTableComponent} from '../student-table/student-table.component';
+import {StudentTableComponent} from '../student-table/student-table.component';
 
 @Component({
   selector: 'app-students-components',
   imports: [
-    ResponsiveTableComponent
+    StudentTableComponent
   ],
   templateUrl: './students-page.component.html',
   standalone: true,

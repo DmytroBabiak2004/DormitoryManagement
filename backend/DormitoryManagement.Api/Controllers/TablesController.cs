@@ -1,7 +1,9 @@
-﻿using DormitoryManagement.Data.Context;
-using DormitoryManagement.Data.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using DormitoryManagement.Data.Context;
+using DormitoryManagement.Data.Models;
+using DormitoryManagement.Data.DTOs;
 
 namespace DormitoryManagement.Api.Controllers
 {
@@ -18,28 +20,96 @@ namespace DormitoryManagement.Api.Controllers
 
         [Authorize(Roles = "Student")]
         [HttpGet]
-        public IActionResult GetTables()
+        public IActionResult GetTables(int page = 1, int pageSize = 10)
         {
-            var tables = _context.Tables.ToList();
-            return Ok(tables);
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var total = _context.Tables.Count();
+
+            // Отримуємо столи з пагінацією і вручну створюємо DTO
+            var tables = _context.Tables
+                .OrderBy(t => t.SerialNumber)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(t => new TableDto
+                {
+                    SerialNumber = t.SerialNumber,
+                    Condition = t.Condition,
+                    Type = t.Type,
+                    RoomNumber = t.RoomNumber
+                })
+                .ToList();
+
+            return Ok(new
+            {
+                tables,
+                total
+            });
         }
+
         [Authorize(Roles = "Commandant,Castelian")]
         [HttpPost]
-        public IActionResult CreateTable([FromBody] Table table)
+        public IActionResult CreateTable([FromBody] CreateTableDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            // Вручну створюємо сутність Table з DTO
+            var table = new Table
+            {
+                SerialNumber = dto.SerialNumber,
+                Condition = dto.Condition,
+                Type = dto.Type,
+                RoomNumber = dto.RoomNumber
+            };
+
             _context.Tables.Add(table);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(GetTables), new { serialNumber = table.SerialNumber }, table);
+            // Повертаємо DTO у відповіді
+            var tableDto = new TableDto
+            {
+                SerialNumber = table.SerialNumber,
+                Condition = table.Condition,
+                Type = table.Type,
+                RoomNumber = table.RoomNumber
+            };
+
+            return CreatedAtAction(nameof(GetTables), new { serialNumber = table.SerialNumber }, tableDto);
         }
+
+        [Authorize(Roles = "Commandant,Castelian")]
+        [HttpPut("{serialNumber}")]
+        public IActionResult UpdateTable(int serialNumber, [FromBody] UpdateTableDto dto)
+        {
+            var table = _context.Tables.FirstOrDefault(t => t.SerialNumber == serialNumber);
+            if (table == null) return NotFound();
+
+            // Вручну оновлюємо поля сутності з DTO
+            table.Condition = dto.Condition;
+            table.Type = dto.Type;
+            table.RoomNumber = dto.RoomNumber;
+
+            _context.SaveChanges();
+
+            // Повертаємо DTO у відповіді
+            var tableDto = new TableDto
+            {
+                SerialNumber = table.SerialNumber,
+                Condition = table.Condition,
+                Type = table.Type,
+                RoomNumber = table.RoomNumber
+            };
+
+            return Ok(tableDto);
+        }
+
         [Authorize(Roles = "Commandant,Castelian")]
         [HttpDelete("{serialNumber}")]
         public IActionResult DeleteTable(int serialNumber)
         {
-            var table = _context.Tables.Find(serialNumber);
+            var table = _context.Tables.FirstOrDefault(t => t.SerialNumber == serialNumber);
             if (table == null)
                 return NotFound();
 

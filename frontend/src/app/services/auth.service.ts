@@ -110,4 +110,35 @@ export class AuthService {
       })
     );
   }
+  // Отримання ролей з токена
+  getUserRoles(): string[] {
+    const token = this.getToken();
+    if (!token) return [];
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+
+      // Роль може зберігатись під різними ключами
+      const roleClaim = payload['role'] || payload['roles'] || payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+
+      if (!roleClaim) return [];
+
+      return Array.isArray(roleClaim) ? roleClaim : [roleClaim];
+    } catch (err) {
+      console.error('Помилка при декодуванні токена:', err);
+      return [];
+    }
+  }
+
+// Чи має користувач вказану роль
+  hasRole(role: string): boolean {
+    return this.getUserRoles().includes(role);
+  }
+
+// Чи має хоча б одну з переданих ролей
+  hasAnyRole(roles: string[]): boolean {
+    const userRoles = this.getUserRoles();
+    return roles.some(r => userRoles.includes(r));
+  }
+
 }

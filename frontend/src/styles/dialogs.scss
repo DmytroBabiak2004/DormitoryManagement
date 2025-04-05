@@ -1,0 +1,199 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.order-box {
+  font-family: 'Roboto', sans-serif;
+  background: #ffffff;
+  padding: 0 15px 0 15px;
+  width: 620px;
+  text-align: center;
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+  border-radius: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  max-height: 80vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #000000 #ffffff;
+}
+
+.order-box::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 0;
+}
+
+.order-box::-webkit-scrollbar-thumb {
+  background: #000000;
+  border-radius: 0;
+}
+
+.order-box::-webkit-scrollbar-thumb:hover {
+  background: #4CAF50;
+}
+
+.order-box h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  padding: 15px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  background: #000000;
+  border-radius: 0;
+  width: calc(100%);
+  margin-left: -15px;
+  margin-right: -15px;
+  position: relative;
+  top: -18px;
+}
+
+.order-box p {
+  font-size: 14px;
+  color: #000000;
+  margin-top: 0;
+  line-height: 1.5px;
+  font-style: italic;
+}
+
+.input-group {
+  margin-bottom: 20px;
+  width: 80%; /* Обмежуємо ширину контейнера інпутів */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-group input {
+  padding: 8px 15px;
+  font-size: 15px;
+  border: 1.5px solid #000000;
+  border-radius: 0;
+  background: #ffffff;
+  color: #000000;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%; /* Інпут займає всю ширину .input-group */
+  box-sizing: border-box;
+}
+
+.input-group input:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+  outline: none;
+}
+
+.input-group .error {
+  color: #ff0000;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between; /* Розподіляємо кнопки по ширині */
+  width: calc(100% + 30px); /* Розтягуємо на всю ширину модалки з урахуванням відступів */
+  margin-left: -15px; /* Зміщуємо вліво */
+  margin-right: -15px; /* Зміщуємо вправо */
+}
+
+.actions .cancel-btn {
+  padding: 10px 20px;
+  font-size: 15px;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 0;
+  transition: background 0.3s ease, transform 0.2s ease;
+  flex: 1; /* Кнопка займає половину доступної ширини */
+  box-sizing: border-box; /* Враховуємо padding у ширині */
+}
+
+.actions .cancel-btn:hover {
+  background: #ff0000;
+  transform: translateY(-2px);
+}
+
+.actions .submit-btn {
+  padding: 20px 20px;
+  font-size: 15px;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 0;
+  transition: background 0.3s ease, transform 0.2s ease;
+  flex: 1; /* Кнопка займає половину доступної ширини */
+  box-sizing: border-box; /* Враховуємо padding у ширині */
+}
+
+.actions .submit-btn:hover {
+  background: #4cae50;
+  transform: translateY(-2px);
+}
+
+.actions .submit-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 770px) {
+  .order-box {
+    max-height: 100vh;
+  }
+}
+
+.gender-group .checkbox-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: #000000;
+  cursor: pointer;
+  position: relative;
+}
+
+.checkbox-label input[type="checkbox"] {
+  display: none; /* Ховаємо стандартний чекбокс */
+}
+
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #000000;
+  border-radius: 4px;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .custom-checkbox {
+  background: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .custom-checkbox::after {
+  content: '\2713'; /* Символ галочки */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.checkbox-label:hover .custom-checkbox {
+  border-color: #4CAF50;
+}

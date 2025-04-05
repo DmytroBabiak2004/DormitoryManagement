@@ -15,14 +15,16 @@ namespace DormitoryManagement.Api.Controllers
         {
             _context = context;
         }
+
         [Authorize(Roles = "Commandant,Castelian,Student")]
         [HttpGet]
-        public async Task<IActionResult> GetRoomsWithFreePlaces()
+        public async Task<IActionResult> GetRoomsWithFreePlaces(int page = 1, int pageSize = 10)
         {
             try
             {
                 var roomsList = new List<object>();
 
+                // Отримуємо всі дані з процедури
                 using (var connection = _context.Database.GetDbConnection())
                 {
                     await connection.OpenAsync();
@@ -33,16 +35,6 @@ namespace DormitoryManagement.Api.Controllers
 
                         using (var reader = await command.ExecuteReaderAsync())
                         {
-                            if (!reader.HasRows)
-                            {
-                                return Ok(new
-                                {
-                                    status = "success",
-                                    message = "No rooms with free places found",
-                                    data = roomsList
-                                });
-                            }
-
                             while (await reader.ReadAsync())
                             {
                                 var roomItem = new
@@ -58,10 +50,36 @@ namespace DormitoryManagement.Api.Controllers
                     }
                 }
 
+                // Реалізуємо пагінацію на рівні C#
+                var total = roomsList.Count;
+                if (page < 1) page = 1;
+                if (pageSize < 1) pageSize = 10;
+
+                var paginatedRooms = roomsList
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                if (!paginatedRooms.Any())
+                {
+                    return Ok(new
+                    {
+                        status = "success",
+                        message = "No rooms with free places found for this page",
+                        data = paginatedRooms,
+                        total,
+                        currentPage = page,
+                        pageSize
+                    });
+                }
+
                 return Ok(new
                 {
                     status = "success",
-                    data = roomsList
+                    data = paginatedRooms,
+                    total,
+                    currentPage = page,
+                    pageSize
                 });
             }
             catch (Exception ex)

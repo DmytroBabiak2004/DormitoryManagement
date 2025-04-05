@@ -1,0 +1,83 @@
+<div (click)="onCancel()" class="modal-overlay">
+  <div (click)="$event.stopPropagation()" class="order-box">
+    <h1>{{ editingStudent ? 'Редагувати студента' : 'Додати нового студента' }}</h1>
+    <p>Заповніть деталі нового студента</p>
+
+    <div (click)="onCancel()" class="modal-overlay">
+      <div (click)="$event.stopPropagation()" class="order-box">
+        <h1>{{ editingStudent ? 'Редагувати студента' : 'Додати нового студента' }}</h1>
+        <p>Заповніть деталі нового студента</p>
+
+        <form (ngSubmit)="onSubmit()" [formGroup]="studentForm">
+          <div class="input-group">
+            <input formControlName="studentNumber" placeholder="Номер студента (TE12345678)" required type="text">
+            <div *ngIf="studentForm.get('studentNumber')?.invalid && studentForm.get('studentNumber')?.touched">
+              <small class="error" *ngIf="studentForm.get('studentNumber')?.errors?.['required']">Номер студента обов’язковий</small>
+              <small class="error" *ngIf="studentForm.get('studentNumber')?.errors?.['pattern']">Формат: TE + 8 цифр</small>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <input formControlName="firstName" placeholder="Ім’я" required type="text">
+            <div *ngIf="studentForm.get('firstName')?.invalid && studentForm.get('firstName')?.touched">
+              <small class="error" *ngIf="studentForm.get('firstName')?.errors?.['required']">Ім’я обов’язкове</small>
+              <small class="error" *ngIf="studentForm.get('firstName')?.errors?.['minlength']">Мінімум 2 символи</small>
+              <small class="error" *ngIf="studentForm.get('firstName')?.errors?.['pattern']">Тільки літери</small>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <input formControlName="lastName" placeholder="Прізвище" required type="text">
+            <div *ngIf="studentForm.get('lastName')?.invalid && studentForm.get('lastName')?.touched">
+              <small class="error" *ngIf="studentForm.get('lastName')?.errors?.['required']">Прізвище обов’язкове</small>
+              <small class="error" *ngIf="studentForm.get('lastName')?.errors?.['minlength']">Мінімум 2 символи</small>
+              <small class="error" *ngIf="studentForm.get('lastName')?.errors?.['pattern']">Тільки літери</small>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <input formControlName="phone" placeholder="Телефон (+380981234567)" required type="text">
+            <div *ngIf="studentForm.get('phone')?.invalid && studentForm.get('phone')?.touched">
+              <small class="error" *ngIf="studentForm.get('phone')?.errors?.['required']">Телефон обов’язковий</small>
+              <small class="error" *ngIf="studentForm.get('phone')?.errors?.['pattern']">Формат: +380 та 9 цифр</small>
+            </div>
+          </div>
+
+          <div class="input-group gender-group">
+            <label>Стать:</label>
+            <div class="checkbox-container">
+              <label class="checkbox-label">
+                <input type="checkbox" [checked]="studentForm.get('gender')?.value === true" (change)="onGenderChange(true)">
+                <span class="custom-checkbox"></span>
+                Чоловік
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" [checked]="studentForm.get('gender')?.value === false" (change)="onGenderChange(false)">
+                <span class="custom-checkbox"></span>
+                Жінка
+              </label>
+            </div>
+            <div *ngIf="studentForm.get('gender')?.invalid && studentForm.get('gender')?.touched">
+              <small class="error">Стать обов’язкова</small>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <input formControlName="birthDate" placeholder="Дата народження" required type="date">
+            <div *ngIf="studentForm.get('birthDate')?.invalid && studentForm.get('birthDate')?.touched">
+              <small class="error" *ngIf="studentForm.get('birthDate')?.errors?.['required']">Дата народження обов’язкова</small>
+              <small class="error" *ngIf="studentForm.get('birthDate')?.errors?.['invalidDate']">Дата має бути між 1900 і сьогодні</small>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button (click)="onCancel()" class="cancel-btn" type="button">Скасувати</button>
+            <button [disabled]="studentForm.invalid" class="submit-btn" type="submit">
+              {{ editingStudent ? 'Зберегти' : 'Додати' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

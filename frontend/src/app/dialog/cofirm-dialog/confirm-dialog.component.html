@@ -1,0 +1,15 @@
+<div class="modal-overlay">
+  <div class="order-box">
+    <h1>{{ data.title || 'Підтвердження' }}</h1>
+    <p>{{ data.message }}</p>
+
+    <div class="actions">
+      <button (click)="onCancel()" class="cancel-btn">
+        {{ data.cancelText || 'Скасувати' }}
+      </button>
+      <button (click)="onConfirm()" class="submit-btn">
+        {{ data.confirmText || 'Підтвердити' }}
+      </button>
+    </div>
+  </div>
+</div>

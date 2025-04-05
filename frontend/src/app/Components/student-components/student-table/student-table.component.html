@@ -8,22 +8,53 @@
       <th>Номер телефону</th>
       <th>Стать</th>
       <th>Дата народження</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let item of data" [class.expanded]="item.expanded">
       <td class="name-cell" data-label="Ім’я:">{{ item.firstName }}</td>
-      <td class="detail-cell" data-label="Прізвище:">{{ item.lastName }}</td>
+      <td class="name-cell" data-label="Прізвище:">{{ item.lastName }}</td>
       <td class="detail-cell" data-label="Студенський:">{{ item.studentNumber }}</td>
-      <td class="detail-cell" data-label="Телефон:">{{ item.phone }} </td>
+      <td class="detail-cell" data-label="Телефон:">{{ item.phone }}</td>
       <td class="detail-cell" data-label="Стать:">{{ item.gender ? 'Чоловіча' : 'Жіноча' }}</td>
-      <td class="detail-cell" data-label="Народження:">{{ item.birthDate }} </td>
+      <td class="detail-cell" data-label="Народження:">{{ item.birthDate }}</td>
       <td class="action-cell">
         <button (click)="toggleDetails(item)" class="details-btn">
           {{ item.expanded ? 'Приховати' : 'Деталі' }}
         </button>
+        <button *ngIf="authService.hasRole('Commandant')" (click)="updateStudent(item)" class="edit-btn">Редагувати</button>
+        <button *ngIf="authService.hasRole('Commandant')" (click)="deleteStudent(item.studentNumber)" class="delete-btn">Видалити</button>
       </td>
     </tr>
     </tbody>
   </table>
+
+  <div class="pagination-container">
+    <div class="pagination-info">
+      Всього елементів: {{totalItems}}
+    </div>
+    <div class="pagination-controls">
+      <button
+        (click)="previousPage()"
+        [disabled]="currentPage === 1"
+        class="pagination-btn">
+        Попередня
+      </button>
+      <span>Сторінка {{currentPage}} з {{totalPages}}</span>
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages || totalPages === 0"
+        class="pagination-btn">
+        Наступна
+      </button>
+      <!-- Кнопка додавання елементу -->
+      <button  *ngIf="authService.hasRole('Commandant')"
+               (click)="addStudent()"
+        class="add-item-btn">
+        Додати студента
+      </button>
+    </div>
+  </div>
+
 </div>

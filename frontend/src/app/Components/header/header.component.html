@@ -16,7 +16,7 @@
       <li class="nav-item">
         <a (click)="handleNavClick()" routerLink="/rooms" routerLinkActive="active">КІМНАТИ</a>
       </li>
-      <li class="nav-item">
+      <li *ngIf="authService.hasRole('Commandant')" class="nav-item">
         <a (click)="handleNavClick()" routerLink="/registrations" routerLinkActive="active">РЕЄСТРАЦІЇ</a>
       </li>
       <li class="nav-item">

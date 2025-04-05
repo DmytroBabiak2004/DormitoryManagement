@@ -19,7 +19,7 @@ namespace DormitoryManagement.Api.Controllers
         }
         [Authorize(Roles = "Commandant,Castelian")]
         [HttpGet("{roomNumber}")]
-        public async Task<IActionResult> GetFurnitureInRoom(string roomNumber)
+        public async Task<IActionResult> GetFurnitureInRoom(string roomNumber, int page = 1, int pageSize = 10)
         {
             try
             {
@@ -36,19 +36,8 @@ namespace DormitoryManagement.Api.Controllers
 
                         using (var reader = await command.ExecuteReaderAsync())
                         {
-                            if (!reader.HasRows)
-                            {
-                                return Ok(new
-                                {
-                                    status = "success",
-                                    message = $"No furniture found for room {roomNumber}",
-                                    data = furnitureList
-                                });
-                            }
-
                             while (await reader.ReadAsync())
                             {
-                                // Переконуємося, що читаємо всі колонки
                                 var furnitureItem = new
                                 {
                                     FurnitureType = reader.GetString(reader.GetOrdinal("FurnitureType")),
@@ -62,10 +51,22 @@ namespace DormitoryManagement.Api.Controllers
                     }
                 }
 
+                var total = furnitureList.Count;
+                if (page < 1) page = 1;
+                if (pageSize < 1) pageSize = 10;
+
+                var paginatedFurniture = furnitureList
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
                 return Ok(new
                 {
                     status = "success",
-                    data = furnitureList
+                    data = paginatedFurniture,
+                    total,
+                    currentPage = page,
+                    pageSize
                 });
             }
             catch (Exception ex)
