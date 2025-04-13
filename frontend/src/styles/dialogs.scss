@@ -197,3 +197,33 @@
 .checkbox-label:hover .custom-checkbox {
   border-color: #4CAF50;
 }
+
+.input-group select {
+  width: 100%;
+  padding: 8px 15px;
+  font-size: 15px;
+  border: 1.5px solid #000000;
+  border-radius: 0;
+  background-color: #ffffff;
+  color: #000000;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23000000' d='M2 0L0 2h4L2 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+  box-sizing: border-box;
+}
+
+.input-group select:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+  outline: none;
+}
+
+.input-group option {
+  color: #000000;
+  background-color: #ffffff;
+}

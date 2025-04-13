@@ -1,24 +1,19 @@
-export enum Condition {
-  New = "New",
-  Good = "Good",
-  Worn = "Worn",
-  Broken = "Broken"
+export interface Condition {
+  id: number;
+ nameOfCondition: string;
 }
 
-export enum ChairType {
-  Wooden = "Wooden",
-  Plastic = "Plastic",
-  Metal = "Metal"
+export interface ChairType {
+  id: number;
+  nameOfChairType: string;
 }
 
-export enum TableType {
-  Wooden = "Wooden",
-  Glass = "Glass",
-  Metal = "Metal"
+export interface TableType {
+  id: number;
+  nameOfTableType: string;
 }
 
-export enum MattressType {
-  Foam = "Foam",
-  Spring = "Spring",
-  Latex = "Latex"
+export interface MattressType {
+  id: number;
+  nameOfMattressType: string;
 }

@@ -10,6 +10,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       }
     });
   }
-
+console.log("asdasd");
   return next(req);
 };

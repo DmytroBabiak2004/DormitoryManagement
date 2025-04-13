@@ -4,16 +4,15 @@ namespace DormitoryManagement.Data.DTOs
 {
     public class CreateMattressDto
     {
-        public int SerialNumber { get; set; }
-        public Condition Condition { get; set; }
-        public MattressType Type { get; set; }
-        public string StudentNumber{ get; set; }
+       public int ConditionId { get; set; }
+        public int TypeId { get; set; }
+        public string StudentNumber { get; set; }
     }
 
     public class UpdateMattressDto
     {
-        public Condition Condition { get; set; }
-        public MattressType Type { get; set; }
+        public int ConditionId { get; set; }
+        public int TypeId { get; set; }
         public string StudentNumber { get; set; }
     }
 

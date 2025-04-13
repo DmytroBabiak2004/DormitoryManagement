@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import {ResponsiveTableComponent} from '../room-table/room-table.component';
+import {RoomTableComponent} from '../room-table/room-table.component';
 
 @Component({
   selector: 'app-room-components',
   imports: [
-    ResponsiveTableComponent
+    RoomTableComponent
   ],
   templateUrl: './room-page.component.html',
   standalone: true,

@@ -12,15 +12,45 @@
     <tbody>
     <tr *ngFor="let item of data" [class.expanded]="item.expanded">
       <td class="name-cell" data-label="Серійний номер:">{{ item.serialNumber}}</td>
-      <td class="detail-cell" data-label="Стан:">{{ item.condition }}</td>
-      <td class="detail-cell" data-label="Тип:">{{ item.type }}</td>
+      <td class="detail-cell" data-label="Стан:">{{ item.condition?.nameOfCondition }}</td>
+      <td class="detail-cell" data-label="Тип:">{{ item.type?.nameOfChairType  }}</td>
       <td class="detail-cell" data-label="Номер кімнати:">{{ item.roomNumber }}</td>
       <td class="action-cell">
         <button (click)="toggleDetails(item)" class="details-btn">
           {{ item.expanded ? 'Приховати' : 'Деталі' }}
         </button>
+        <button *ngIf="authService.hasRole('Commandant')" (click)="updateChair(item)" class="edit-btn">Редагувати</button>
+        <button *ngIf="authService.hasRole('Commandant')" (click)="deleteChair(item.serialNumber)" class="delete-btn">Видалити</button>
       </td>
     </tr>
     </tbody>
   </table>
 </div>
+
+<div class="pagination-container">
+  <div class="pagination-info">
+    Всього елементів: {{totalItems}}
+  </div>
+  <div class="pagination-controls">
+    <button
+      (click)="previousPage()"
+      [disabled]="currentPage === 1"
+      class="pagination-btn">
+      Попередня
+    </button>
+    <span>Сторінка {{currentPage}} з {{totalPages}}</span>
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages || totalPages === 0"
+      class="pagination-btn">
+      Наступна
+    </button>
+    <!-- Кнопка додавання елементу -->
+    <button  *ngIf="authService.hasRole('Commandant')"
+             (click)="addChair()"
+             class="add-item-btn">
+      Додати крісло
+    </button>
+  </div>
+</div>
+

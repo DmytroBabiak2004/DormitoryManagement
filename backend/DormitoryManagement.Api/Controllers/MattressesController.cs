@@ -28,7 +28,6 @@ namespace DormitoryManagement.Api.Controllers
 
             var total = _context.Mattresses.Count();
 
-            // Отримуємо матраци з пагінацією і вручну створюємо DTO
             var mattresses = _context.Mattresses
                 .OrderBy(m => m.SerialNumber)
                 .Skip((page - 1) * pageSize)
@@ -56,24 +55,33 @@ namespace DormitoryManagement.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Вручну створюємо сутність Mattress з DTO
+            // Перевіряємо, чи існує Condition
+            var condition = _context.Condition.Find(dto.ConditionId);
+            if (condition == null)
+                return BadRequest("Invalid ConditionId");
+
+            // Перевіряємо, чи існує Type
+            var type = _context.MattressTypes.Find(dto.TypeId);
+            if (type == null)
+                return BadRequest("Invalid TypeId");
+
+            // Створюємо сутність Mattress
             var mattress = new Mattress
             {
-                SerialNumber = dto.SerialNumber,
-                Condition = dto.Condition,
-                Type = dto.Type,
+                ConditionId = dto.ConditionId, // Встановлюємо зовнішній ключ
+                TypeId = dto.TypeId, // Встановлюємо зовнішній ключ
                 StudentNumber = dto.StudentNumber
             };
 
             _context.Mattresses.Add(mattress);
             _context.SaveChanges();
 
-            // Повертаємо DTO у відповіді
+            // Повертаємо DTO з повними об'єктами Condition і Type
             var mattressDto = new MattressDto
             {
                 SerialNumber = mattress.SerialNumber,
-                Condition = mattress.Condition,
-                Type = mattress.Type,
+                Condition = condition, // Використовуємо завантажений об'єкт
+                Type = type, // Використовуємо завантажений об'єкт
                 StudentNumber = mattress.StudentNumber
             };
 
@@ -84,22 +92,36 @@ namespace DormitoryManagement.Api.Controllers
         [HttpPut("{serialNumber}")]
         public IActionResult UpdateMattress(int serialNumber, [FromBody] UpdateMattressDto dto)
         {
-            var mattress = _context.Mattresses.FirstOrDefault(m => m.SerialNumber == serialNumber);
-            if (mattress == null) return NotFound();
+            var mattress = _context.Mattresses
+                .Include(m => m.Condition)
+                .Include(m => m.Type)
+                .FirstOrDefault(m => m.SerialNumber == serialNumber);
+            if (mattress == null)
+                return NotFound();
 
-            // Вручну оновлюємо поля сутності з DTO
-            mattress.Condition = dto.Condition;
-            mattress.Type = dto.Type;
+            // Перевіряємо, чи існує Condition
+            var condition = _context.Condition.Find(dto.ConditionId);
+            if (condition == null)
+                return BadRequest("Invalid ConditionId");
+
+            // Перевіряємо, чи існує Type
+            var type = _context.MattressTypes.Find(dto.TypeId);
+            if (type == null)
+                return BadRequest("Invalid TypeId");
+
+            // Оновлюємо поля
+            mattress.ConditionId = dto.ConditionId;
+            mattress.TypeId = dto.TypeId;
             mattress.StudentNumber = dto.StudentNumber;
 
             _context.SaveChanges();
 
-            // Повертаємо DTO у відповіді
+            // Повертаємо DTO
             var mattressDto = new MattressDto
             {
                 SerialNumber = mattress.SerialNumber,
-                Condition = mattress.Condition,
-                Type = mattress.Type,
+                Condition = condition,
+                Type = type,
                 StudentNumber = mattress.StudentNumber
             };
 

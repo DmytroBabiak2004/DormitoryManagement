@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import {ResponsiveTableComponent} from '../chair-table/chair-table.component';
+import {ChairTableComponent} from '../chair-table/chair-table.component';
 
 @Component({
   selector: 'app-chair-components',
   imports: [
-    ResponsiveTableComponent
+    ChairTableComponent
   ],
   templateUrl: './chair-page.component.html',
   standalone: true,
-  styleUrl: './chair-page.component.scss'
+  styleUrl: 'chair-page.component.scss'
 })
 
 export class ChairsComponent {

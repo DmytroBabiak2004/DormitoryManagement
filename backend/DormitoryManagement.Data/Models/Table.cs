@@ -8,5 +8,7 @@
         public string RoomNumber { get; set; }
 
         public Room? Room { get; set; }
+        public int ConditionId { get; set; }
+        public int TypeId { get; set; }
     }
 }

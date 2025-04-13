@@ -55,26 +55,35 @@ namespace DormitoryManagement.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Вручну створюємо сутність Chair з DTO
+            // Перевіряємо, чи існує Condition
+            var condition = _context.Condition.Find(dto.ConditionId);
+            if (condition == null)
+                return BadRequest("Invalid ConditionId");
+
+            // Перевіряємо, чи існує Type
+            var type = _context.ChairTypes.Find(dto.TypeId);
+            if (type == null)
+                return BadRequest("Invalid TypeId");
+
+            // Створюємо сутність Chair
             var chair = new Chair
             {
-                SerialNumber = dto.SerialNumber,
-                Condition = dto.Condition,
-                Type = dto.Type,
+                ConditionId = dto.ConditionId, // Встановлюємо зовнішній ключ
+                TypeId = dto.TypeId, // Встановлюємо зовнішній ключ
                 RoomNumber = dto.RoomNumber
             };
 
             _context.Chairs.Add(chair);
             _context.SaveChanges();
 
-            // Повертаємо DTO у відповіді
+            // Повертаємо DTO з повними об'єктами Condition і Type
             var chairDto = new ChairDto
             {
                 SerialNumber = chair.SerialNumber,
-                Condition = chair.Condition,
-                Type = chair.Type,
+                Condition = condition, // Використовуємо завантажений об'єкт
+                Type = type, // Використовуємо завантажений об'єкт
                 RoomNumber = chair.RoomNumber
-            };
+    };
 
             return CreatedAtAction(nameof(GetChairs), new { serialNumber = chair.SerialNumber }, chairDto);
         }
@@ -83,22 +92,36 @@ namespace DormitoryManagement.Api.Controllers
         [HttpPut("{serialNumber}")]
         public IActionResult UpdateChair(int serialNumber, [FromBody] UpdateChairDto dto)
         {
-            var chair = _context.Chairs.FirstOrDefault(c => c.SerialNumber == serialNumber);
-            if (chair == null) return NotFound();
+            var chair = _context.Chairs
+                .Include(c => c.Condition)
+                .Include(c => c.Type)
+                .FirstOrDefault(c => c.SerialNumber == serialNumber);
+            if (chair == null)
+                return NotFound();
 
-            // Вручну оновлюємо поля сутності з DTO
-            chair.Condition = dto.Condition;
-            chair.Type = dto.Type;
+            // Перевіряємо, чи існує Condition
+            var condition = _context.Condition.Find(dto.ConditionId);
+            if (condition == null)
+                return BadRequest("Invalid ConditionId");
+
+            // Перевіряємо, чи існує Type
+            var type = _context.ChairTypes.Find(dto.TypeId);
+            if (type == null)
+                return BadRequest("Invalid TypeId");
+
+            // Оновлюємо поля
+            chair.ConditionId = dto.ConditionId;
+            chair.TypeId = dto.TypeId;
             chair.RoomNumber = dto.RoomNumber;
 
             _context.SaveChanges();
 
-            // Повертаємо DTO у відповіді
+            // Повертаємо DTO
             var chairDto = new ChairDto
             {
                 SerialNumber = chair.SerialNumber,
-                Condition = chair.Condition,
-                Type = chair.Type,
+                Condition = condition,
+                Type = type,
                 RoomNumber = chair.RoomNumber
             };
 

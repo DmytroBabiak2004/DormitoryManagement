@@ -27,7 +27,6 @@ namespace DormitoryManagement.Api.Controllers
 
             var total = _context.Tables.Count();
 
-            // Отримуємо столи з пагінацією і вручну створюємо DTO
             var tables = _context.Tables
                 .OrderBy(t => t.SerialNumber)
                 .Skip((page - 1) * pageSize)
@@ -55,24 +54,33 @@ namespace DormitoryManagement.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Вручну створюємо сутність Table з DTO
+            // Перевіряємо, чи існує Condition
+            var condition = _context.Condition.Find(dto.ConditionId);
+            if (condition == null)
+                return BadRequest("Invalid ConditionId");
+
+            // Перевіряємо, чи існує Type
+            var type = _context.TableTypes.Find(dto.TypeId);
+            if (type == null)
+                return BadRequest("Invalid TypeId");
+
+            // Створюємо сутність Table
             var table = new Table
             {
-                SerialNumber = dto.SerialNumber,
-                Condition = dto.Condition,
-                Type = dto.Type,
+               ConditionId = dto.ConditionId, // Встановлюємо зовнішній ключ
+                TypeId = dto.TypeId, // Встановлюємо зовнішній ключ
                 RoomNumber = dto.RoomNumber
             };
 
             _context.Tables.Add(table);
             _context.SaveChanges();
 
-            // Повертаємо DTO у відповіді
+            // Повертаємо DTO з повними об'єктами Condition і Type
             var tableDto = new TableDto
             {
                 SerialNumber = table.SerialNumber,
-                Condition = table.Condition,
-                Type = table.Type,
+                Condition = condition, // Використовуємо завантажений об'єкт
+                Type = type, // Використовуємо завантажений об'єкт
                 RoomNumber = table.RoomNumber
             };
 
@@ -83,22 +91,36 @@ namespace DormitoryManagement.Api.Controllers
         [HttpPut("{serialNumber}")]
         public IActionResult UpdateTable(int serialNumber, [FromBody] UpdateTableDto dto)
         {
-            var table = _context.Tables.FirstOrDefault(t => t.SerialNumber == serialNumber);
-            if (table == null) return NotFound();
+            var table = _context.Tables
+                .Include(t => t.Condition)
+                .Include(t => t.Type)
+                .FirstOrDefault(t => t.SerialNumber == serialNumber);
+            if (table == null)
+                return NotFound();
 
-            // Вручну оновлюємо поля сутності з DTO
-            table.Condition = dto.Condition;
-            table.Type = dto.Type;
+            // Перевіряємо, чи існує Condition
+            var condition = _context.Condition.Find(dto.ConditionId);
+            if (condition == null)
+                return BadRequest("Invalid ConditionId");
+
+            // Перевіряємо, чи існує Type
+            var type = _context.TableTypes.Find(dto.TypeId);
+            if (type == null)
+                return BadRequest("Invalid TypeId");
+
+            // Оновлюємо поля
+            table.ConditionId = dto.ConditionId;
+            table.TypeId = dto.TypeId;
             table.RoomNumber = dto.RoomNumber;
 
             _context.SaveChanges();
 
-            // Повертаємо DTO у відповіді
+            // Повертаємо DTO
             var tableDto = new TableDto
             {
                 SerialNumber = table.SerialNumber,
-                Condition = table.Condition,
-                Type = table.Type,
+                Condition = condition,
+                Type = type,
                 RoomNumber = table.RoomNumber
             };
 

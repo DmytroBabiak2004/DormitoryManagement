@@ -14,15 +14,7 @@ import { AuthService } from '../../../services/auth.service';
   imports: [CommonModule]
 })
 export class StudentTableComponent implements OnInit {
-  data: {
-    firstName: string;
-    lastName: string;
-    expanded: boolean;
-    gender: boolean;
-    phone: string;
-    studentNumber: string;
-    birthDate: string
-  }[] = [];
+  data: Student[] = [];
   currentPage: number = 1;
   pageSize: number = 10;
   totalItems: number = 0;

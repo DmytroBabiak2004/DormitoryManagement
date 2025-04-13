@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import {ResponsiveTableComponent} from '../table-table/table-table.component';
+import {TableTableComponent} from '../table-table/table-table.component';
 
 @Component({
   selector: 'app-table-components',
   imports: [
-    ResponsiveTableComponent
+    TableTableComponent
   ],
   templateUrl: './table-page.component.html',
   standalone: true,
