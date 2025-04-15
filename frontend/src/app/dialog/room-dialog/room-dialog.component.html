@@ -1,0 +1,48 @@
+<div (click)="onCancel()" class="modal-overlay">
+  <div (click)="$event.stopPropagation()" class="order-box">
+    <h1>{{ editingChair ? 'Редагувати крісло' : 'Додати нове крісло' }}</h1>
+    <p>Заповніть інформацію про крісло</p>
+
+    <form (ngSubmit)="onSubmit()" [formGroup]="chairForm">
+      <!-- СТАН -->
+      <div class="input-group">
+        <label>Стан крісла</label>
+        <select formControlName="conditionId" required>
+          <option *ngFor="let cond of conditions" [value]="cond.id">
+            {{ cond.nameOfCondition }}
+          </option>
+        </select>
+        <div *ngIf="chairForm.get('conditionId')?.invalid && chairForm.get('conditionId')?.touched">
+          <small class="error">Стан обов’язковий</small>
+        </div>
+      </div>
+
+      <!-- ТИП -->
+      <div class="input-group">
+        <label>Тип крісла</label>
+        <select formControlName="typeId" required>
+          <option *ngFor="let type of types" [value]="type.id">
+            {{ type.nameOfChairType }}
+          </option>
+        </select>
+        <div *ngIf="chairForm.get('typeId')?.invalid && chairForm.get('typeId')?.touched">
+          <small class="error">Тип обов’язковий</small>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <input formControlName="roomNumber" placeholder="Номер кімнати" required type="text" />
+        <div *ngIf="chairForm.get('roomNumber')?.invalid && chairForm.get('roomNumber')?.touched">
+          <small class="error">Номер кімнати обов’язковий</small>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button (click)="onCancel()" class="cancel-btn" type="button">Скасувати</button>
+        <button [disabled]="chairForm.invalid" class="submit-btn" type="submit">
+          {{ editingChair ? 'Зберегти' : 'Додати' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
