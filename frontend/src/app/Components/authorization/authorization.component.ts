@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,7 @@ export class AuthorizationComponent {
   public authForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    role: new FormControl('', { nonNullable: true }) // Без значення за замовчуванням
+    role: new FormControl('', { nonNullable: true })
   });
 
   constructor(private authService: AuthService, private router: Router) {
@@ -35,7 +36,7 @@ export class AuthorizationComponent {
     const roleControl = this.authForm.get('role');
     if (this.isRegisterMode) {
       roleControl?.setValidators([Validators.required]);
-      roleControl?.setValue(''); // Скидаємо значення для випадаючого списку
+      roleControl?.setValue('');
     } else {
       roleControl?.clearValidators();
       roleControl?.setValue('');
@@ -59,9 +60,9 @@ export class AuthorizationComponent {
           this.isRegisterMode = false;
           this.checkSessionAndRedirect();
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           console.error('Помилка реєстрації:', err);
-          this.errorMessage = err.error?.errors ? err.error.errors[0].description : 'Не вдалося зареєструватися';
+          this.errorMessage = err.error?.message || 'Не вдалося зареєструватися';
         }
       });
     } else {
@@ -71,9 +72,9 @@ export class AuthorizationComponent {
           this.errorMessage = null;
           this.checkSessionAndRedirect();
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           console.error('Помилка входу:', err);
-          this.errorMessage = 'Невірний логін або пароль';
+          this.errorMessage = err.error?.message || 'Невірний логін або пароль';
         }
       });
     }
@@ -81,16 +82,16 @@ export class AuthorizationComponent {
 
   private checkSessionAndRedirect() {
     this.authService.checkSession().subscribe({
-      next: (isValid) => {
+      next: (isValid: boolean) => {
         if (isValid) {
           this.router.navigate(['/home']);
         } else {
           this.errorMessage = 'Сесія невалідна після авторизації';
         }
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         console.error('Помилка перевірки сесії:', err);
-        this.errorMessage = 'Не вдалося перевірити сесію';
+        this.errorMessage = err.error?.message || 'Не вдалося перевірити сесію';
       }
     });
   }

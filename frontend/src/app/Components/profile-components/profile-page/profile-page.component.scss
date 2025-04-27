@@ -1,0 +1,74 @@
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f3f2ef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.profile-container {
+  width: 350px;
+  text-align: center;
+  margin: auto;
+}
+
+.profile-box {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 500px) {
+  .profile-box {
+    box-shadow: none;
+  }
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.info-group {
+  margin-bottom: 15px;
+  text-align: left;
+  width: 100%;
+}
+
+.info-group label {
+  font-weight: bold;
+  color: #333;
+  margin-right: 10px;
+}
+
+.info-group span {
+  color: #666;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  background: #026fbd;
+  color: white;
+  margin-top: 20px;
+}
+
+.logout-btn:hover {
+  background: #025b9e;
+}
+
+.error-message {
+  margin-top: 10px;
+  color: red;
+}

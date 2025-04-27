@@ -7,7 +7,6 @@ using DormitoryManagement.Data.DTOs;
 
 namespace DormitoryManagement.Api.Controllers
 {
-    [Authorize(Roles = "Commandant,Castelian")]
     [ApiController]
     [Route("api/[controller]")]
     public class MattressesController : ControllerBase
@@ -19,7 +18,7 @@ namespace DormitoryManagement.Api.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Commandant,Castelian,Student")]
+        [Authorize(Roles = "Commandant,Castelian")]
         [HttpGet]
         public IActionResult GetMattresses(int page = 1, int pageSize = 10)
         {
@@ -49,39 +48,83 @@ namespace DormitoryManagement.Api.Controllers
         }
 
         [Authorize(Roles = "Commandant,Castelian")]
+        [HttpGet("search")]
+        public IActionResult SearchMattresses(string query, int page = 1, int pageSize = 10)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return GetMattresses(page, pageSize); // If query is empty, return all mattresses
+            }
+
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            // Normalize query to lowercase for case-insensitive search
+            var normalizedQuery = query.ToLower();
+
+            // Search across multiple fields
+            var mattressesQuery = _context.Mattresses
+                .Include(m => m.Condition)
+                .Include(m => m.Type)
+                .Where(m =>
+                    m.SerialNumber.ToString().Contains(normalizedQuery) ||
+                    m.Condition.NameOfCondition.ToLower().Contains(normalizedQuery) ||
+                    m.Type.NameOfMattressType.ToLower().Contains(normalizedQuery) ||
+                    m.StudentNumber.ToLower().Contains(normalizedQuery)
+                );
+
+            var total = mattressesQuery.Count();
+
+            var mattresses = mattressesQuery
+                .OrderBy(m => m.SerialNumber)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(m => new MattressDto
+                {
+                    SerialNumber = m.SerialNumber,
+                    Condition = m.Condition,
+                    Type = m.Type,
+                    StudentNumber = m.StudentNumber
+                })
+                .ToList();
+
+            return Ok(new
+            {
+                mattresses,
+                total
+            });
+        }
+
+        [Authorize(Roles = "Commandant,Castelian")]
         [HttpPost]
         public IActionResult CreateMattress([FromBody] CreateMattressDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Перевіряємо, чи існує Condition
             var condition = _context.Condition.Find(dto.ConditionId);
             if (condition == null)
                 return BadRequest("Invalid ConditionId");
 
-            // Перевіряємо, чи існує Type
             var type = _context.MattressTypes.Find(dto.TypeId);
             if (type == null)
                 return BadRequest("Invalid TypeId");
 
-            // Створюємо сутність Mattress
             var mattress = new Mattress
             {
-                ConditionId = dto.ConditionId, // Встановлюємо зовнішній ключ
-                TypeId = dto.TypeId, // Встановлюємо зовнішній ключ
+                ConditionId = dto.ConditionId,
+                TypeId = dto.TypeId,
                 StudentNumber = dto.StudentNumber
             };
 
             _context.Mattresses.Add(mattress);
             _context.SaveChanges();
 
-            // Повертаємо DTO з повними об'єктами Condition і Type
             var mattressDto = new MattressDto
             {
                 SerialNumber = mattress.SerialNumber,
-                Condition = condition, // Використовуємо завантажений об'єкт
-                Type = type, // Використовуємо завантажений об'єкт
+                Condition = condition,
+                Type = type,
                 StudentNumber = mattress.StudentNumber
             };
 
@@ -99,24 +142,20 @@ namespace DormitoryManagement.Api.Controllers
             if (mattress == null)
                 return NotFound();
 
-            // Перевіряємо, чи існує Condition
             var condition = _context.Condition.Find(dto.ConditionId);
             if (condition == null)
                 return BadRequest("Invalid ConditionId");
 
-            // Перевіряємо, чи існує Type
             var type = _context.MattressTypes.Find(dto.TypeId);
             if (type == null)
                 return BadRequest("Invalid TypeId");
 
-            // Оновлюємо поля
             mattress.ConditionId = dto.ConditionId;
             mattress.TypeId = dto.TypeId;
             mattress.StudentNumber = dto.StudentNumber;
 
             _context.SaveChanges();
 
-            // Повертаємо DTO
             var mattressDto = new MattressDto
             {
                 SerialNumber = mattress.SerialNumber,

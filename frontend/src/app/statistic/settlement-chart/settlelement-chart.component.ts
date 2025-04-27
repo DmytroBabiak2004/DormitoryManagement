@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartData, ChartOptions } from 'chart.js';
-import { CommonModule } from '@angular/common';
+import { ChartData, ChartOptions, Chart, registerables } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 import { RegistrationService } from '../../services/registration-controller.service';
 import { Registration } from '../../models/Registration';
+
+// Реєструємо всі контролери Chart.js, включаючи "bar"
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-settlement-chart',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './settlement-chart.component.html'
+  imports: [BaseChartDirective], // Використовуємо BaseChartDirective замість CommonModule
+  templateUrl: './settlement-chart.component.html',
+  styleUrls: ['./settlement-chart.component.css'] // Додаємо файл стилів
 })
 export class SettlementChartComponent implements OnInit {
   chartData: ChartData<'bar', number[], string> = {
@@ -17,13 +21,16 @@ export class SettlementChartComponent implements OnInit {
       {
         label: 'Кількість заселень',
         data: [],
-        backgroundColor: '#4CAF50'
+        backgroundColor: '#4CAF50',
+        borderColor: '#388E3C',
+        borderWidth: 1
       }
     ]
   };
 
   chartOptions: ChartOptions<'bar'> = {
     responsive: true,
+    maintainAspectRatio: false, // Дозволяє діаграмі адаптуватися до розмірів контейнера
     plugins: {
       legend: {
         display: true,
@@ -32,6 +39,21 @@ export class SettlementChartComponent implements OnInit {
       title: {
         display: true,
         text: 'Статистика заселення за місяцями'
+      }
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Місяць'
+        }
+      },
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Кількість заселень'
+        }
       }
     }
   };
@@ -45,18 +67,24 @@ export class SettlementChartComponent implements OnInit {
       registrations.forEach(reg => {
         if (reg.checkInDate) {
           const date = new Date(reg.checkInDate);
-          const monthKey = date.toLocaleDateString('uk-UA', {year: 'numeric', month: 'long'});
+          const monthKey = date.toLocaleDateString('uk-UA', { year: 'numeric', month: 'long' });
 
-          if (dateCounts[monthKey]) {
-            dateCounts[monthKey]++;
-          } else {
-            dateCounts[monthKey] = 1;
-          }
+          dateCounts[monthKey] = (dateCounts[monthKey] || 0) + 1;
         }
       });
 
-      this.chartData.labels = Object.keys(dateCounts);
-      this.chartData.datasets[0].data = Object.values(dateCounts);
+      this.chartData = {
+        labels: Object.keys(dateCounts),
+        datasets: [
+          {
+            label: 'Кількість заселень',
+            data: Object.values(dateCounts),
+            backgroundColor: '#4CAF50',
+            borderColor: '#388E3C',
+            borderWidth: 1
+          }
+        ]
+      };
     });
   }
 }

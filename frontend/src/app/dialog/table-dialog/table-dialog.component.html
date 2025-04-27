@@ -1,46 +1,46 @@
 <div (click)="onCancel()" class="modal-overlay">
   <div (click)="$event.stopPropagation()" class="order-box">
-    <h1>{{ editingChair ? 'Редагувати крісло' : 'Додати нове крісло' }}</h1>
-    <p>Заповніть інформацію про крісло</p>
+    <h1>{{ editingTable ? 'Редагувати стіл' : 'Додати новий стіл' }}</h1>
+    <p>Заповніть інформацію про стіл</p>
 
-    <form (ngSubmit)="onSubmit()" [formGroup]="chairForm">
+    <form (ngSubmit)="onSubmit()" [formGroup]="tableForm">
       <!-- СТАН -->
       <div class="input-group">
-        <label>Стан крісла</label>
+        <label>Стан столу</label>
         <select formControlName="conditionId" required>
           <option *ngFor="let cond of conditions" [value]="cond.id">
             {{ cond.nameOfCondition }}
           </option>
         </select>
-        <div *ngIf="chairForm.get('conditionId')?.invalid && chairForm.get('conditionId')?.touched">
+        <div *ngIf="tableForm.get('conditionId')?.invalid && tableForm.get('conditionId')?.touched">
           <small class="error">Стан обов’язковий</small>
         </div>
       </div>
 
       <!-- ТИП -->
       <div class="input-group">
-        <label>Тип крісла</label>
+        <label>Тип столу</label>
         <select formControlName="typeId" required>
           <option *ngFor="let type of types" [value]="type.id">
-            {{ type.nameOfChairType }}
+            {{ type.nameOfTableType }}
           </option>
         </select>
-        <div *ngIf="chairForm.get('typeId')?.invalid && chairForm.get('typeId')?.touched">
+        <div *ngIf="tableForm.get('typeId')?.invalid && tableForm.get('typeId')?.touched">
           <small class="error">Тип обов’язковий</small>
         </div>
       </div>
 
       <div class="input-group">
         <input formControlName="roomNumber" placeholder="Номер кімнати" required type="text" />
-        <div *ngIf="chairForm.get('roomNumber')?.invalid && chairForm.get('roomNumber')?.touched">
+        <div *ngIf="tableForm.get('roomNumber')?.invalid && tableForm.get('roomNumber')?.touched">
           <small class="error">Номер кімнати обов’язковий</small>
         </div>
       </div>
 
       <div class="actions">
         <button (click)="onCancel()" class="cancel-btn" type="button">Скасувати</button>
-        <button [disabled]="chairForm.invalid" class="submit-btn" type="submit">
-          {{ editingChair ? 'Зберегти' : 'Додати' }}
+        <button [disabled]="tableForm.invalid" class="submit-btn" type="submit">
+          {{ editingTable ? 'Зберегти' : 'Додати' }}
         </button>
       </div>
     </form>

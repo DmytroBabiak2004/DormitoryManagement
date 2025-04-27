@@ -1,46 +1,70 @@
 <div (click)="onCancel()" class="modal-overlay">
   <div (click)="$event.stopPropagation()" class="order-box">
-    <h1>{{ editingChair ? 'Редагувати крісло' : 'Додати нове крісло' }}</h1>
-    <p>Заповніть інформацію про крісло</p>
+    <h1>{{ editingRoom ? 'Редагувати кімнату' : 'Додати нову кімнату' }}</h1>
+    <p>Заповніть інформацію про кімнату</p>
 
-    <form (ngSubmit)="onSubmit()" [formGroup]="chairForm">
-      <!-- СТАН -->
+    <form (ngSubmit)="onSubmit()" [formGroup]="roomForm">
+      <!-- НОМЕР КІМНАТИ (ЦИФРИ) -->
       <div class="input-group">
-        <label>Стан крісла</label>
-        <select formControlName="conditionId" required>
-          <option *ngFor="let cond of conditions" [value]="cond.id">
-            {{ cond.nameOfCondition }}
-          </option>
-        </select>
-        <div *ngIf="chairForm.get('conditionId')?.invalid && chairForm.get('conditionId')?.touched">
-          <small class="error">Стан обов’язковий</small>
+        <label>Номер кімнати (цифри)</label>
+        <input
+          formControlName="roomNumberDigits"
+          placeholder="Номер (наприклад, 101)"
+          [attr.disabled]="editingRoom ? true : null"
+          required
+          type="text"
+        >
+        <div *ngIf="roomForm.get('roomNumberDigits')?.invalid && roomForm.get('roomNumberDigits')?.touched">
+          <small class="error" *ngIf="roomForm.get('roomNumberDigits')?.errors?.['required']">
+            Номер обов’язковий
+          </small>
+          <small class="error" *ngIf="roomForm.get('roomNumberDigits')?.errors?.['pattern']">
+            Має бути 3 цифри
+          </small>
         </div>
       </div>
 
-      <!-- ТИП -->
+      <!-- СУФІКС (a або b) -->
       <div class="input-group">
-        <label>Тип крісла</label>
-        <select formControlName="typeId" required>
-          <option *ngFor="let type of types" [value]="type.id">
-            {{ type.nameOfChairType }}
+        <label>Суфікс</label>
+        <select
+          formControlName="roomNumberSuffix"
+          [attr.disabled]="editingRoom ? true : null"
+          required
+        >
+          <option value="" disabled>Виберіть суфікс</option>
+          <option *ngFor="let suffix of suffixes" [value]="suffix">
+            {{ suffix }}
           </option>
         </select>
-        <div *ngIf="chairForm.get('typeId')?.invalid && chairForm.get('typeId')?.touched">
-          <small class="error">Тип обов’язковий</small>
+        <div *ngIf="roomForm.get('roomNumberSuffix')?.invalid && roomForm.get('roomNumberSuffix')?.touched">
+          <small class="error">Суфікс обов’язковий</small>
         </div>
       </div>
 
+      <!-- КІЛЬКІСТЬ МІСЦЬ -->
       <div class="input-group">
-        <input formControlName="roomNumber" placeholder="Номер кімнати" required type="text" />
-        <div *ngIf="chairForm.get('roomNumber')?.invalid && chairForm.get('roomNumber')?.touched">
-          <small class="error">Номер кімнати обов’язковий</small>
+        <label>Кількість місць</label>
+        <input
+          formControlName="numberOfPlaces"
+          placeholder="Кількість місць (1-10)"
+          required
+          type="number"
+        >
+        <div *ngIf="roomForm.get('numberOfPlaces')?.invalid && roomForm.get('numberOfPlaces')?.touched">
+          <small class="error" *ngIf="roomForm.get('numberOfPlaces')?.errors?.['required']">
+            Кількість місць обов’язкова
+          </small>
+          <small class="error" *ngIf="roomForm.get('numberOfPlaces')?.errors?.['min'] || roomForm.get('numberOfPlaces')?.errors?.['max']">
+            Має бути від 1 до 10
+          </small>
         </div>
       </div>
 
       <div class="actions">
         <button (click)="onCancel()" class="cancel-btn" type="button">Скасувати</button>
-        <button [disabled]="chairForm.invalid" class="submit-btn" type="submit">
-          {{ editingChair ? 'Зберегти' : 'Додати' }}
+        <button [disabled]="roomForm.invalid" class="submit-btn" type="submit">
+          {{ editingRoom ? 'Зберегти' : 'Додати' }}
         </button>
       </div>
     </form>

@@ -4,14 +4,16 @@ import { Mattress } from '../../../models/Mattress';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../dialog/cofirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
-//import {MattressDialogComponent} from '../../../dialog/mattress-dialog/mattress-dialog.component';
+import {MattressDialogComponent} from '../../../dialog/mattress-dialog/mattress-dialog.component';  // Додано
 import { AuthService } from '../../../services/auth.service';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
 @Component({
   selector: 'app-mattress-table',
   templateUrl: './mattress-table.component.html',
   styleUrls: ['../../../../styles/tables.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, ReactiveFormsModule, FormsModule]
 })
 export class MattressTableComponent implements OnInit {
   data: Mattress[] = [];
@@ -19,7 +21,7 @@ export class MattressTableComponent implements OnInit {
   pageSize: number = 10;
   totalItems: number = 0;
   totalPages: number = 0;
-
+  searchQuery: string = '';
 
 
   constructor(private mattressService: MattressService, private dialog: MatDialog, public authService: AuthService) {
@@ -41,6 +43,33 @@ export class MattressTableComponent implements OnInit {
     }, error => {
       console.error('Error loading mattresses:', error);
     });
+  }
+
+  searchMattresses(): void {
+    if (!this.searchQuery.trim()) {
+      this.loadMattresses(); // Якщо пошуковий запит порожній, завантажуємо всі матраци
+      return;
+    }
+
+    this.mattressService.searchMattresses(this.searchQuery, this.currentPage, this.pageSize).subscribe(
+      response => {
+        this.data = response.mattresses.map(mattress => ({
+          ...mattress,
+          expanded: false
+        }));
+        this.totalItems = response.total ?? 0;
+        this.totalPages= Math.ceil(this.totalItems / this.pageSize);
+      },
+      error => {
+        console.error('Error searching mattresses:', error);
+      }
+    );
+  }
+
+  resetSearch(): void {
+    this.searchQuery = '';
+    this.currentPage = 1;
+    this.loadMattresses();
   }
 
   previousPage(): void {
@@ -83,19 +112,23 @@ export class MattressTableComponent implements OnInit {
     });
   }
 
-   /* addMattress(): void {
-      const dialogRef = this.dialog.open(MattressDialogComponent);
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) this.loadMattresses();
-      });
-    }
+  addMattress(): void {
+    const dialogRef = this.dialog.open(MattressDialogComponent);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) this.loadMattresses();
+    });
+  }
 
-    updateMattress(mattress: Mattress): void {
-      const dialogRef = this.dialog.open(MattressDialogComponent);
-      dialogRef.componentInstance.setChairForEdit(mattress);
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) this.loadMattresses();
-      });
-  }*/
+  updateMattress(mattress: Mattress): void {
+    console.log('Редагуємо матрац:', mattress);
+    const dialogRef = this.dialog.open(MattressDialogComponent);
+    dialogRef.componentInstance.setMattressForEdit(mattress);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Результат редагування:', result);
+        this.loadMattresses();
+      }
+    });
+  }
 
 }

@@ -1,4 +1,17 @@
 <div class="table-container">
+
+  <div class="search-container">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Введіть серійний номер, стан, тип або номер кімнати"
+      class="search-input"
+      (keyup.enter)="searchChairs()"
+    />
+    <button (click)="searchChairs()" class="search-btn">Пошук</button>
+    <button *ngIf="searchQuery" (click)="resetSearch()" class="reset-btn">Скинути</button>
+  </div>
+
   <table class="responsive-table">
     <thead>
     <tr>
@@ -12,20 +25,20 @@
     <tbody>
     <tr *ngFor="let item of data" [class.expanded]="item.expanded">
       <td class="name-cell" data-label="Серійний номер:">{{ item.serialNumber}}</td>
-      <td class="detail-cell" data-label="Стан:">{{ item.condition?.nameOfCondition }}</td>
-      <td class="detail-cell" data-label="Тип:">{{ item.type?.nameOfChairType  }}</td>
+      <td class="detail-cell" data-label="Стан:">{{ item.condition.nameOfCondition }}</td>
+      <td class="detail-cell" data-label="Тип:">{{ item.type.nameOfChairType  }}</td>
       <td class="detail-cell" data-label="Номер кімнати:">{{ item.roomNumber }}</td>
       <td class="action-cell">
         <button (click)="toggleDetails(item)" class="details-btn">
           {{ item.expanded ? 'Приховати' : 'Деталі' }}
         </button>
-        <button *ngIf="authService.hasRole('Commandant')" (click)="updateChair(item)" class="edit-btn">Редагувати</button>
-        <button *ngIf="authService.hasRole('Commandant')" (click)="deleteChair(item.serialNumber)" class="delete-btn">Видалити</button>
+        <button *ngIf="authService.hasRole('Commandant') || authService.hasRole('Castelian') " (click)="updateChair(item)" class="edit-btn">Редагувати</button>
+        <button *ngIf="authService.hasRole('Commandant') || authService.hasRole('Castelian') " (click)="deleteChair(item.serialNumber)" class="delete-btn">Видалити</button>
       </td>
     </tr>
     </tbody>
   </table>
-</div>
+
 
 <div class="pagination-container">
   <div class="pagination-info">
@@ -46,7 +59,7 @@
       Наступна
     </button>
     <!-- Кнопка додавання елементу -->
-    <button  *ngIf="authService.hasRole('Commandant')"
+    <button  *ngIf="authService.hasRole('Commandant') || authService.hasRole('Castelian') "
              (click)="addChair()"
              class="add-item-btn">
       Додати крісло
@@ -54,3 +67,4 @@
   </div>
 </div>
 
+</div>

@@ -1,46 +1,51 @@
 <div (click)="onCancel()" class="modal-overlay">
   <div (click)="$event.stopPropagation()" class="order-box">
-    <h1>{{ editingChair ? 'Редагувати крісло' : 'Додати нове крісло' }}</h1>
-    <p>Заповніть інформацію про крісло</p>
+    <h1>{{ editingMattress ? 'Редагувати матрац' : 'Додати новий матрац' }}</h1>
+    <p>Заповніть інформацію про матрац</p>
 
-    <form (ngSubmit)="onSubmit()" [formGroup]="chairForm">
+    <form (ngSubmit)="onSubmit()" [formGroup]="mattressForm">
       <!-- СТАН -->
       <div class="input-group">
-        <label>Стан крісла</label>
+        <label>Стан матрацу</label>
         <select formControlName="conditionId" required>
           <option *ngFor="let cond of conditions" [value]="cond.id">
             {{ cond.nameOfCondition }}
           </option>
         </select>
-        <div *ngIf="chairForm.get('conditionId')?.invalid && chairForm.get('conditionId')?.touched">
+        <div *ngIf="mattressForm.get('conditionId')?.invalid && mattressForm.get('conditionId')?.touched">
           <small class="error">Стан обов’язковий</small>
         </div>
       </div>
 
       <!-- ТИП -->
       <div class="input-group">
-        <label>Тип крісла</label>
+        <label>Тип матрацу</label>
         <select formControlName="typeId" required>
           <option *ngFor="let type of types" [value]="type.id">
-            {{ type.nameOfChairType }}
+            {{ type.nameOfMattressType }}
           </option>
         </select>
-        <div *ngIf="chairForm.get('typeId')?.invalid && chairForm.get('typeId')?.touched">
+        <div *ngIf="mattressForm.get('typeId')?.invalid && mattressForm.get('typeId')?.touched">
           <small class="error">Тип обов’язковий</small>
         </div>
       </div>
 
       <div class="input-group">
-        <input formControlName="roomNumber" placeholder="Номер кімнати" required type="text" />
-        <div *ngIf="chairForm.get('roomNumber')?.invalid && chairForm.get('roomNumber')?.touched">
-          <small class="error">Номер кімнати обов’язковий</small>
+        <input formControlName="studentNumber" placeholder="Номер студента (TE12345678)" required type="text">
+        <div *ngIf="mattressForm.get('studentNumber')?.invalid && mattressForm.get('studentNumber')?.touched">
+          <small class="error" *ngIf="mattressForm.get('studentNumber')?.errors?.['required']">
+            Номер студента обов’язковий
+          </small>
+          <small class="error" *ngIf="mattressForm.get('studentNumber')?.errors?.['pattern']">
+            Формат: TE + 8 цифр
+          </small>
         </div>
       </div>
 
       <div class="actions">
         <button (click)="onCancel()" class="cancel-btn" type="button">Скасувати</button>
-        <button [disabled]="chairForm.invalid" class="submit-btn" type="submit">
-          {{ editingChair ? 'Зберегти' : 'Додати' }}
+        <button [disabled]="mattressForm.invalid" class="submit-btn" type="submit">
+          {{ editingMattress ? 'Зберегти' : 'Додати' }}
         </button>
       </div>
     </form>

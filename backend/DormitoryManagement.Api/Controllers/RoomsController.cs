@@ -27,8 +27,52 @@ namespace DormitoryManagement.Api.Controllers
 
             var total = _context.Rooms.Count();
 
-            // Отримуємо кімнати з пагінацією і вручну створюємо DTO
             var rooms = _context.Rooms
+                .OrderBy(r => r.RoomNumber)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(r => new RoomDto
+                {
+                    RoomNumber = r.RoomNumber,
+                    NumberOfPlaces = r.NumberOfPlaces
+                })
+                .ToList();
+
+            return Ok(new
+            {
+                rooms,
+                total
+            });
+        }
+
+        [Authorize(Roles = "Commandant,Castelian,Student")]
+        [HttpGet("search")]
+        public IActionResult SearchRooms(string query, int page = 1, int pageSize = 10)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return GetRooms(page, pageSize); // If query is empty, return all rooms
+            }
+
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            // Normalize query to lowercase for case-insensitive search
+            var normalizedQuery = query.ToLower();
+
+            // Try to parse query as an integer for NumberOfPlaces
+            bool isNumeric = int.TryParse(query, out int numberOfPlaces);
+
+            // Search across RoomNumber and NumberOfPlaces
+            var roomsQuery = _context.Rooms
+                .Where(r =>
+                    r.RoomNumber.ToLower().Contains(normalizedQuery) ||
+                    (isNumeric && r.NumberOfPlaces == numberOfPlaces)
+                );
+
+            var total = roomsQuery.Count();
+
+            var rooms = roomsQuery
                 .OrderBy(r => r.RoomNumber)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -53,7 +97,6 @@ namespace DormitoryManagement.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Вручну створюємо сутність Room з DTO
             var room = new Room
             {
                 RoomNumber = dto.RoomNumber,
@@ -63,7 +106,6 @@ namespace DormitoryManagement.Api.Controllers
             _context.Rooms.Add(room);
             _context.SaveChanges();
 
-            // Повертаємо DTO у відповіді
             var roomDto = new RoomDto
             {
                 RoomNumber = room.RoomNumber,
@@ -80,12 +122,10 @@ namespace DormitoryManagement.Api.Controllers
             var room = _context.Rooms.FirstOrDefault(r => r.RoomNumber == roomNumber);
             if (room == null) return NotFound();
 
-            // Вручну оновлюємо поля сутності з DTO
             room.NumberOfPlaces = dto.NumberOfPlaces;
 
             _context.SaveChanges();
 
-            // Повертаємо DTO у відповіді
             var roomDto = new RoomDto
             {
                 RoomNumber = room.RoomNumber,

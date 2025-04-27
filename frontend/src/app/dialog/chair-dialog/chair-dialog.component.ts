@@ -44,8 +44,8 @@ export class ChairDialogComponent implements OnInit {
   setChairForEdit(chair: Chair): void {
     this.editingChair = chair;
     this.chairForm.patchValue({
-      conditionId: chair.condition?.id || null,
-      typeId: chair.type?.id || null,
+      conditionId: chair.condition.id,
+      typeId: chair.type.id,
       roomNumber: chair.roomNumber
     });
   }

@@ -1,8 +1,11 @@
 <div class="card shadow p-4 rounded-4 bg-white text-center">
   <h2 class="mb-4">Статистика заселення за часом</h2>
-  <canvas baseChart
-          [data]="chartData"
-          [options]="chartOptions"
-          [type]="'bar'">
-  </canvas>
+  <div class="chart-container">
+    <canvas
+      baseChart
+      [data]="chartData"
+      [options]="chartOptions"
+      [type]="'bar'"
+    ></canvas>
+  </div>
 </div>

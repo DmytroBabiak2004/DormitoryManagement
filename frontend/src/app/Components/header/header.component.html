@@ -11,7 +11,7 @@
 
     <ul [ngClass]="{'open': isMenuOpen}" class="nav-list">
       <li class="nav-item">
-        <a (click)="handleNavClick()" routerLink="/students" routerLinkActive="active">СТУДЕНТИ</a>
+        <a *ngIf="authService.hasRole('Commandant') || authService.hasRole('Castelian')" (click)="handleNavClick()" routerLink="/students" routerLinkActive="active">СТУДЕНТИ</a>
       </li>
       <li class="nav-item">
         <a (click)="handleNavClick()" routerLink="/rooms" routerLinkActive="active">КІМНАТИ</a>
@@ -19,23 +19,36 @@
       <li *ngIf="authService.hasRole('Commandant')" class="nav-item">
         <a (click)="handleNavClick()" routerLink="/registrations" routerLinkActive="active">РЕЄСТРАЦІЇ</a>
       </li>
-      <li class="nav-item">
-        <a (click)="handleNavClick()" routerLink="/chairs" routerLinkActive="active">КРІСЛА</a>
+      <li *ngIf="authService.hasRole('Castelian') || authService.hasRole('Commandant')" class="nav-item dropdown">
+        <a  class="dropdown-toggle">МЕБЛІ</a>
+        <ul class="dropdown-menu">
+          <li><a (click)="handleNavClick()" routerLink="/chairs" routerLinkActive="active">Крісла</a></li>
+          <li><a (click)="handleNavClick()" routerLink="/tables" routerLinkActive="active">Столи</a></li>
+          <li><a (click)="handleNavClick()" routerLink="/mattresses" routerLinkActive="active">Матраци</a></li>
+          <li><a (click)="handleNavClick()" routerLink="/furniture-in-room" routerLinkActive="active">Меблі у кімнатах</a></li>
+        </ul>
+      </li>
+      <li *ngIf="authService.hasRole('Student')" class="nav-item">
+        <a  (click)="handleNavClick()" routerLink="/furniture-in-room" routerLinkActive="active">Меблі у кімнатах</a>
       </li>
       <li class="nav-item">
-        <a (click)="handleNavClick()" routerLink="/tables" routerLinkActive="active">СТОЛИ</a>
+        <a (click)="handleNavClick()" routerLink="/student-in-room" routerLinkActive="active">Студенти у кімнаті</a>
       </li>
       <li class="nav-item">
-        <a (click)="handleNavClick()" routerLink="/mattresses" routerLinkActive="active">МАТРАЦИ</a>
+        <a (click)="handleNavClick()" routerLink="/room-with-free-places" routerLinkActive="active">Вільні кімнати</a>
       </li>
       <li class="nav-item">
         <a (click)="handleNavClick()" routerLink="/reports" routerLinkActive="active">ЗВІТИ</a>
       </li>
-      <li class="nav-item">
-        <a (click)="handleNavClick()" routerLink="/profile" routerLinkActive="active">
+      <li class="nav-item dropdown">
+        <a (click)="toggleDropdown()" class="dropdown-toggle">
           <img src="/assets/img/user-logo.png" alt="User Logo" class="user-logo">
           МІЙ ПРОФІЛЬ
         </a>
+        <ul class="dropdown-menu">
+          <li><a (click)="handleNavClick()" routerLink="/profile" routerLinkActive="active">Акаунт</a></li>
+          <li><a (click)="onLogout()">Вийти</a></li>
+        </ul>
       </li>
     </ul>
   </nav>

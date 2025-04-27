@@ -8,8 +8,11 @@ import { RoomsComponent } from './Components/room-components/room-page/room-page
 import { ReportsComponent } from './Components/reports-page/reports-page.component';
 import { ProfileComponent } from './Components/profile-components/profile-page/profile-page.component';
 import { HomeComponent } from './Components/home-page/home-page.component';
-import { AuthGuard } from './guards/auth.guard';
 import { AuthorizationComponent } from './Components/authorization/authorization.component';
+import { FurnitureComponent } from './Components/FurnitureInRoom-components/furniture-in-room-page/furniture-in-room-page.component';
+import {StudentsInRoomComponent} from './Components/StudentsInRoom-components/students-in-room-page/students-in-room-page.component';
+import {RoomWithFreePlacesComponent} from './Components/RoomWithFreePlaces-components/room-with-free-places-page/room-with-free-places-page.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'login', component: AuthorizationComponent },  // додаємо маршрут для входу
@@ -21,6 +24,9 @@ export const routes: Routes = [
   { path: 'registrations', component: RegistrationsComponent, canActivate: [AuthGuard] },
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'furniture-in-room', component: FurnitureComponent, canActivate: [AuthGuard] },
+  { path: 'student-in-room', component: StudentsInRoomComponent, canActivate: [AuthGuard] },
+  { path: 'room-with-free-places', component: RoomWithFreePlacesComponent, canActivate: [AuthGuard] },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }

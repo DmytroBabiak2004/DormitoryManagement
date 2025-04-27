@@ -4,14 +4,15 @@ import { Table } from '../../../models/Table';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../dialog/cofirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
-//import {TableDialogComponent} from '../../../dialog/table-dialog/table-dialog.component';  // Додано
+import {TableDialogComponent} from '../../../dialog/table-dialog/table-dialog.component';  // Додано
 import { AuthService } from '../../../services/auth.service';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 @Component({
   selector: 'app-table-table',
   templateUrl: './table-table.component.html',
   styleUrls: ['../../../../styles/tables.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, ReactiveFormsModule, FormsModule]
 })
 export class TableTableComponent implements OnInit {
   data: Table[] = [];
@@ -19,7 +20,7 @@ export class TableTableComponent implements OnInit {
   pageSize: number = 10;
   totalItems: number = 0;
   totalPages: number = 0;
-
+  searchQuery: string = '';
 
 
   constructor(private tableService: TableService, private dialog: MatDialog, public authService: AuthService) {
@@ -41,6 +42,33 @@ export class TableTableComponent implements OnInit {
     }, error => {
       console.error('Error loading tables:', error);
     });
+  }
+
+  searchTables(): void {
+    if (!this.searchQuery.trim()) {
+      this.loadTables();
+      return;
+    }
+
+    this.tableService.searchTables(this.searchQuery, this.currentPage, this.pageSize).subscribe(
+      response => {
+        this.data = response.tables.map(table => ({
+          ...table,
+          expanded: false
+        }));
+        this.totalItems = response.total ?? 0;
+        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+      },
+      error => {
+        console.error('Error searching tables:', error);
+      }
+    );
+  }
+
+  resetSearch(): void {
+    this.searchQuery = '';
+    this.currentPage = 1;
+    this.loadTables();
   }
 
   previousPage(): void {
@@ -65,7 +93,7 @@ export class TableTableComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Підтвердження видалення',
-        message: 'Ви дійсно хочете видалити цей стіл?',
+        message: 'Ви дійсно хочете видалити цей cтіл?',
         confirmText: 'Так',
         cancelText: 'Ні'
       }
@@ -75,7 +103,7 @@ export class TableTableComponent implements OnInit {
       console.log('Результат діалогу:', result);
 
       if (result) {
-        console.log('Викликаємо deleteChair() в сервісі');
+        console.log('Викликаємо deleteTable() в сервісі');
         this.tableService.deleteTable(serialNumber).subscribe(() => {
           this.loadTables();
         });
@@ -83,7 +111,7 @@ export class TableTableComponent implements OnInit {
     });
   }
 
-/*  addTable(): void {
+  addTable(): void {
     const dialogRef = this.dialog.open(TableDialogComponent);
     dialogRef.afterClosed().subscribe(result => {
       if (result) this.loadTables();
@@ -96,6 +124,6 @@ export class TableTableComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) this.loadTables();
     });
-  }*/
+  }
 
 }

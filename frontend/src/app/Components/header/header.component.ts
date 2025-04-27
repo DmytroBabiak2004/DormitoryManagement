@@ -32,4 +32,14 @@ export class HeaderComponent {
     }
   }
 
+  onLogout() {
+    this.authService.logout();
+  }
+  dropdownOpen = false;
+
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+
 }

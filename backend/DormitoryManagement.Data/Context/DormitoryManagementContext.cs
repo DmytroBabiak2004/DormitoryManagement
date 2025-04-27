@@ -21,6 +21,11 @@ namespace DormitoryManagement.Data.Context
         public DbSet<TableType> TableTypes { get; set; }
         public DbSet<MattressType> MattressTypes { get; set; }
 
+        public async Task GetGenderStatisticsLinqAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -34,12 +39,20 @@ namespace DormitoryManagement.Data.Context
             modelBuilder.Entity<Registration>()
                 .HasOne(reg => reg.Student)
                 .WithOne(s => s.Registration)
-             .HasForeignKey<Registration>(s => s.StudentNumber);
+                .HasForeignKey<Registration>(s => s.StudentNumber);
 
             modelBuilder.Entity<Registration>()
                 .HasOne(reg => reg.Room)
                 .WithMany(room => room.Registrations)
                 .HasForeignKey(n => n.RoomNumber);
+
+            modelBuilder.Entity<Registration>()
+                .Property(r => r.CheckInDate)
+                .HasColumnType("date");
+
+            modelBuilder.Entity<Registration>()
+                .Property(r => r.CheckOutDate)
+                .HasColumnType("date");
 
             modelBuilder.Entity<Room>()
                 .HasKey(room => room.RoomNumber);

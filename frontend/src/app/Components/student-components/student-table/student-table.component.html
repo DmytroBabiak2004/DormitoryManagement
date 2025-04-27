@@ -1,4 +1,18 @@
 <div class="table-container">
+
+
+  <div class="search-container">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Введіть cтудентський, телефон, ім’я або прізвище"
+      class="search-input"
+      (keyup.enter)="searchStudents()"
+    />
+    <button (click)="searchStudents()" class="search-btn">Пошук</button>
+    <button *ngIf="searchQuery" (click)="resetSearch()" class="reset-btn">Скинути</button>
+  </div>
+
   <table class="responsive-table">
     <thead>
     <tr>

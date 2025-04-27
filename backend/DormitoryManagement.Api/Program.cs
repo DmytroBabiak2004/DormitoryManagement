@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using DormitoryManagement.Data.Context;
@@ -46,13 +45,6 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 
-    // Політика для продакшену (обмежена конкретним джерелом)
-    options.AddPolicy("AllowSpecificOrigin", policy =>
-    {
-        policy.WithOrigins("http://localhost:4200") // Зміни на твій фронтенд URL
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
 });
 
 // Додаємо сервіси

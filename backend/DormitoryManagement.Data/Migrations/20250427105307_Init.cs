@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace DormitoryManagement.Data.Migrations
 {
     /// <inheritdoc />
@@ -56,7 +58,7 @@ namespace DormitoryManagement.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NameOfChairType = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    NameOfChairType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -69,7 +71,7 @@ namespace DormitoryManagement.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NameOfCondition = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    NameOfCondition = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -82,7 +84,7 @@ namespace DormitoryManagement.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NameOfMattressType = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    NameOfMattressType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -93,8 +95,8 @@ namespace DormitoryManagement.Data.Migrations
                 name: "Rooms",
                 columns: table => new
                 {
-                    RoomNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    NumberOfPlaces = table.Column<int>(type: "int", nullable: false)
+                    RoomNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    NumberOfPlaces = table.Column<int>(type: "int", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -105,10 +107,10 @@ namespace DormitoryManagement.Data.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    StudentNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StudentNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Gender = table.Column<bool>(type: "bit", nullable: true),
                     BirthDate = table.Column<DateOnly>(type: "date", nullable: true)
                 },
@@ -123,7 +125,7 @@ namespace DormitoryManagement.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NameOfTableType = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    NameOfTableType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -240,11 +242,11 @@ namespace DormitoryManagement.Data.Migrations
                 name: "Chairs",
                 columns: table => new
                 {
-                    SerialNumber = table.Column<int>(type: "int", nullable: false)
+                    SerialNumber = table.Column<int>(type: "int", maxLength: 50, nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ConditionId = table.Column<int>(type: "int", nullable: false),
-                    TypeId = table.Column<int>(type: "int", nullable: false),
-                    RoomNumber = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ConditionId = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    TypeId = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    RoomNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -273,11 +275,11 @@ namespace DormitoryManagement.Data.Migrations
                 name: "Mattresses",
                 columns: table => new
                 {
-                    SerialNumber = table.Column<int>(type: "int", nullable: false)
+                    SerialNumber = table.Column<int>(type: "int", maxLength: 50, nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ConditionId = table.Column<int>(type: "int", nullable: false),
-                    TypeId = table.Column<int>(type: "int", nullable: false),
-                    StudentNumber = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ConditionId = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    TypeId = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    StudentNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -308,8 +310,8 @@ namespace DormitoryManagement.Data.Migrations
                 {
                     RegistrationId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoomNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StudentNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    RoomNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CheckInDate = table.Column<DateOnly>(type: "date", nullable: true),
                     CheckOutDate = table.Column<DateOnly>(type: "date", nullable: true)
                 },
@@ -334,11 +336,11 @@ namespace DormitoryManagement.Data.Migrations
                 name: "Tables",
                 columns: table => new
                 {
-                    SerialNumber = table.Column<int>(type: "int", nullable: false)
+                    SerialNumber = table.Column<int>(type: "int", maxLength: 50, nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ConditionId = table.Column<int>(type: "int", nullable: false),
-                    TypeId = table.Column<int>(type: "int", nullable: false),
-                    RoomNumber = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ConditionId = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    TypeId = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    RoomNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -361,6 +363,16 @@ namespace DormitoryManagement.Data.Migrations
                         principalTable: "TableTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "1", null, "Commandant", "COMMANDANT" },
+                    { "2", null, "Castelian", "CASTELIAN" },
+                    { "3", null, "Student", "STUDENT" }
                 });
 
             migrationBuilder.CreateIndex(

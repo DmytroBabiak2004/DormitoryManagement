@@ -6,12 +6,13 @@ import { ConfirmDialogComponent } from '../../../dialog/cofirm-dialog/confirm-di
 import { CommonModule } from '@angular/common';
 import {StudentDialogComponent} from '../../../dialog/student-dialog/student-dialog.component';  // Додано
 import { AuthService } from '../../../services/auth.service';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 @Component({
   selector: 'app-student-table',
   templateUrl: './student-table.component.html',
   styleUrls: ['../../../../styles/tables.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, ReactiveFormsModule, FormsModule]
 })
 export class StudentTableComponent implements OnInit {
   data: Student[] = [];
@@ -19,7 +20,7 @@ export class StudentTableComponent implements OnInit {
   pageSize: number = 10;
   totalItems: number = 0;
   totalPages: number = 0;
-
+  searchQuery: string = '';
 
   constructor(private studentService: StudentService, private dialog: MatDialog, public authService: AuthService) {
   }
@@ -40,6 +41,33 @@ export class StudentTableComponent implements OnInit {
     }, error => {
       console.error('Error loading students:', error);
     });
+  }
+
+  searchStudents(): void {
+    if (!this.searchQuery.trim()) {
+      this.loadStudents(); // Якщо пошуковий запит порожній, завантажуємо всіх студентів
+      return;
+    }
+
+    this.studentService.searchStudents(this.searchQuery, this.currentPage, this.pageSize).subscribe(
+      response => {
+        this.data = response.students.map(student => ({
+          ...student,
+          expanded: false
+        }));
+        this.totalItems = response.total ?? 0;
+        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+      },
+      error => {
+        console.error('Error searching students:', error);
+      }
+    );
+  }
+
+  resetSearch(): void {
+    this.searchQuery = '';
+    this.currentPage = 1;
+    this.loadStudents();
   }
 
   previousPage(): void {

@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Student } from '../models/Student';
+import {Room} from '../models/Room';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
-  private apiUrl = 'https://localhost:44344/api/Students';
+  private apiUrl = 'http://localhost:5073/api/Students';
 
   constructor(private http: HttpClient) {}
 
@@ -21,6 +22,11 @@ export class StudentService {
 
   getStudents(page: number = 1, pageSize: number = 10): Observable<{ students: Student[], total: number }> {
     const url = `${this.apiUrl}?page=${page}&pageSize=${pageSize}`;
+    return this.http.get<{ students: Student[], total: number }>(url, { headers: this.getAuthHeaders() });
+  }
+
+  searchStudents(query: string, page: number = 1, pageSize: number = 10): Observable<{ students: Student[], total: number }> {
+    const url = `${this.apiUrl}/search?query=${encodeURIComponent(query)}&page=${page}&pageSize=${pageSize}`;
     return this.http.get<{ students: Student[], total: number }>(url, { headers: this.getAuthHeaders() });
   }
 

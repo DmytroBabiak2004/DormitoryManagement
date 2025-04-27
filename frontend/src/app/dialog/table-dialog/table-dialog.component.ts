@@ -2,37 +2,37 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ChairService } from '../../services/chair-controller.service';
-import { Chair, ChairDTO } from '../../models/Chair';
+import { TableService } from '../../services/table-controller.service';
+import { Table, TableDTO } from '../../models/Table';
 import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-chair-dialog',
-  templateUrl: './chair-dialog.component.html',
+  selector: 'app-table-dialog',
+  templateUrl: './table-dialog.component.html',
   standalone: true,
   imports: [ReactiveFormsModule, NgIf, NgForOf],
   styleUrls: ['../../../styles/dialogs.scss']
 })
-export class ChairDialogComponent implements OnInit {
-  chairForm: FormGroup;
-  editingChair: Chair | null = null;
+export class TableDialogComponent implements OnInit {
+  tableForm: FormGroup;
+  editingTable: Table | null = null;
   conditions = [
     { id: 1, nameOfCondition: 'New' },
     { id: 2, nameOfCondition: 'Good' },
     { id: 3, nameOfCondition: 'Worn' }
   ];
   types = [
-    { id: 1, nameOfChairType: 'Wooden' },
-    { id: 2, nameOfChairType: 'Office' },
-    { id: 3, nameOfChairType: 'Metal' }
+    { id: 1, nameOfTableType: 'Wooden' },
+    { id: 2, nameOfTableType: 'Small' },
+    { id: 3, nameOfTableType: 'Metal' }
   ];
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<ChairDialogComponent>,
-    private chairService: ChairService
+    private dialogRef: MatDialogRef<TableDialogComponent>,
+    private tableService: TableService
   ) {
-    this.chairForm = this.fb.group({
+    this.tableForm = this.fb.group({
       typeId: [null, Validators.required],
       conditionId: [null, Validators.required],
       roomNumber: ['', [Validators.required]]
@@ -41,26 +41,26 @@ export class ChairDialogComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  setChairForEdit(chair: Chair): void {
-    this.editingChair = chair;
-    this.chairForm.patchValue({
-      conditionId: chair.condition?.id || null,
-      typeId: chair.type?.id || null,
-      roomNumber: chair.roomNumber
+  setTableForEdit(table: Table): void {
+    this.editingTable = table;
+    this.tableForm.patchValue({
+      conditionId: table.condition?.id || null,
+      typeId: table.type?.id || null,
+      roomNumber: table.roomNumber
     });
   }
 
   onSubmit(): void {
-    if (this.chairForm.valid) {
-      const chairData: ChairDTO = {
-        conditionId: this.chairForm.value.conditionId,
-        typeId: this.chairForm.value.typeId,
-        roomNumber: this.chairForm.value.roomNumber
+    if (this.tableForm.valid) {
+      const tableData: TableDTO = {
+        conditionId: this.tableForm.value.conditionId,
+        typeId: this.tableForm.value.typeId,
+        roomNumber: this.tableForm.value.roomNumber
       };
 
-      const request = this.editingChair
-        ? this.chairService.updateChair(chairData, this.editingChair.serialNumber)
-        : this.chairService.addChair(chairData);
+      const request = this.editingTable
+        ? this.tableService.updateTable(tableData, this.editingTable.serialNumber)
+        : this.tableService.addTable(tableData);
 
       request.subscribe({
         next: (result) => {

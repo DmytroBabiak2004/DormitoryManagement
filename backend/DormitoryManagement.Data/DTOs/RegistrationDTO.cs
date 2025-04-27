@@ -6,14 +6,17 @@ using System.Threading.Tasks;
 
 namespace DormitoryManagement.Data.DTOs
 {
-    public class CreateRegistrationDto
+    namespace DormitoryManagement.Api.Dtos
     {
-        public string StudentNumber { get; set; }
-        public string RoomNumber { get; set; }
-        public DateOnly? CheckInDate { get; set; }
-        public DateOnly? CheckOutDate { get; set; }
+        public class CreateRegistrationDto
+        {
+            public int RegistrationId { get; set; }
+            public string StudentNumber { get; set; }
+            public string RoomNumber { get; set; }
+            public DateOnly? CheckInDate { get; set; }
+            public DateOnly? CheckOutDate { get; set; }
+        }
     }
-
     public class UpdateRegistrationDto
     {
         public string StudentNumber { get; set; }

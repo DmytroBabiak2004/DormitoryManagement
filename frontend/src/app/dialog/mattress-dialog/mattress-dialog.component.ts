@@ -2,65 +2,68 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ChairService } from '../../services/chair-controller.service';
-import { Chair, ChairDTO } from '../../models/Chair';
+import { MattressService } from '../../services/mattress-controller.service';
+import { Mattress, MattressDTO } from '../../models/Mattress';
 import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-chair-dialog',
-  templateUrl: './chair-dialog.component.html',
+  selector: 'app-mattress-dialog',
+  templateUrl: './mattress-dialog.component.html',
   standalone: true,
   imports: [ReactiveFormsModule, NgIf, NgForOf],
   styleUrls: ['../../../styles/dialogs.scss']
 })
-export class ChairDialogComponent implements OnInit {
-  chairForm: FormGroup;
-  editingChair: Chair | null = null;
+export class MattressDialogComponent implements OnInit {
+  mattressForm: FormGroup;
+  editingMattress: Mattress | null = null;
   conditions = [
     { id: 1, nameOfCondition: 'New' },
     { id: 2, nameOfCondition: 'Good' },
     { id: 3, nameOfCondition: 'Worn' }
   ];
   types = [
-    { id: 1, nameOfChairType: 'Wooden' },
-    { id: 2, nameOfChairType: 'Office' },
-    { id: 3, nameOfChairType: 'Metal' }
+    { id: 1, nameOfMattressType: 'Foam' },
+    { id: 2, nameOfMattressType: 'Spring' },
+    { id: 3, nameOfMattressType: 'Latex' }
   ];
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<ChairDialogComponent>,
-    private chairService: ChairService
+    private dialogRef: MatDialogRef<MattressDialogComponent>,
+    private mattressService: MattressService
   ) {
-    this.chairForm = this.fb.group({
+    this.mattressForm = this.fb.group({
       typeId: [null, Validators.required],
       conditionId: [null, Validators.required],
-      roomNumber: ['', [Validators.required]]
+      studentNumber: ['', [
+        Validators.required,
+        Validators.pattern(/^TE\d{8}$/) // Формат: TE + 8 цифр
+      ]]
     });
   }
 
   ngOnInit(): void {}
 
-  setChairForEdit(chair: Chair): void {
-    this.editingChair = chair;
-    this.chairForm.patchValue({
-      conditionId: chair.condition?.id || null,
-      typeId: chair.type?.id || null,
-      roomNumber: chair.roomNumber
+  setMattressForEdit(mattress: Mattress): void {
+    this.editingMattress = mattress;
+    this.mattressForm.patchValue({
+      conditionId: mattress.condition.id,
+      typeId: mattress.type.id,
+      studentNumber: mattress.studentNumber
     });
   }
 
   onSubmit(): void {
-    if (this.chairForm.valid) {
-      const chairData: ChairDTO = {
-        conditionId: this.chairForm.value.conditionId,
-        typeId: this.chairForm.value.typeId,
-        roomNumber: this.chairForm.value.roomNumber
+    if (this.mattressForm.valid) {
+      const mattressData: MattressDTO = {
+        conditionId: this.mattressForm.value.conditionId,
+        typeId: this.mattressForm.value.typeId,
+        studentNumber: this.mattressForm.value.studentNumber
       };
 
-      const request = this.editingChair
-        ? this.chairService.updateChair(chairData, this.editingChair.serialNumber)
-        : this.chairService.addChair(chairData);
+      const request = this.editingMattress
+        ? this.mattressService.updateMattress(mattressData, this.editingMattress.serialNumber)
+        : this.mattressService.addMattress(mattressData);
 
       request.subscribe({
         next: (result) => {
@@ -68,6 +71,8 @@ export class ChairDialogComponent implements OnInit {
         },
         error: (err) => {
           console.error('Помилка:', err);
+          // Додайте повідомлення для користувача, наприклад:
+          // this.snackBar.open('Не вдалося додати матрац: ' + err.message, 'Закрити', { duration: 3000 });
         }
       });
     }

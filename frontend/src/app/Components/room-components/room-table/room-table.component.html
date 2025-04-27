@@ -1,4 +1,17 @@
 <div class="table-container">
+
+  <div class="search-container">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Введіть кількість місць або номер кімнати"
+      class="search-input"
+      (keyup.enter)="searchRooms()"
+    />
+    <button (click)="searchRooms()" class="search-btn">Пошук</button>
+    <button *ngIf="searchQuery" (click)="resetSearch()" class="reset-btn">Скинути</button>
+  </div>
+
   <table class="responsive-table">
     <thead>
     <tr>
@@ -14,8 +27,38 @@
         <button (click)="toggleDetails(item)" class="details-btn">
           {{ item.expanded ? 'Приховати' : 'Деталі' }}
         </button>
+        <button *ngIf="authService.hasRole('Commandant')" (click)="updateRoom(item)" class="edit-btn">Редагувати</button>
+        <button *ngIf="authService.hasRole('Commandant')" (click)="deleteRoom(item.roomNumber)" class="delete-btn">Видалити</button>
       </td>
     </tr>
     </tbody>
   </table>
+
+
+<div class="pagination-container">
+  <div class="pagination-info">
+    Всього елементів: {{totalItems}}
+  </div>
+  <div class="pagination-controls">
+    <button
+      (click)="previousPage()"
+      [disabled]="currentPage === 1"
+      class="pagination-btn">
+      Попередня
+    </button>
+    <span>Сторінка {{currentPage}} з {{totalPages}}</span>
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages || totalPages === 0"
+      class="pagination-btn">
+      Наступна
+    </button>
+    <!-- Кнопка додавання елементу -->
+    <button  *ngIf="authService.hasRole('Commandant')"
+             (click)="addRoom()"
+             class="add-item-btn">
+      Додати кімнату
+    </button>
+  </div>
+</div>
 </div>

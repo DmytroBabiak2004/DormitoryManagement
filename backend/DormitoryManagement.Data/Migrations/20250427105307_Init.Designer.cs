@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DormitoryManagement.Data.Migrations
 {
     [DbContext(typeof(DormitoryManagementContext))]
-    [Migration("20250401202517_Added_UserRole")]
-    partial class Added_UserRole
+    [Migration("20250427105307_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,18 +29,22 @@ namespace DormitoryManagement.Data.Migrations
                 {
                     b.Property<int>("SerialNumber")
                         .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SerialNumber"));
 
                     b.Property<int>("ConditionId")
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     b.Property<string>("RoomNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("TypeId")
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     b.HasKey("SerialNumber");
@@ -64,7 +68,8 @@ namespace DormitoryManagement.Data.Migrations
 
                     b.Property<string>("NameOfChairType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -81,7 +86,8 @@ namespace DormitoryManagement.Data.Migrations
 
                     b.Property<string>("NameOfCondition")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -92,18 +98,22 @@ namespace DormitoryManagement.Data.Migrations
                 {
                     b.Property<int>("SerialNumber")
                         .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SerialNumber"));
 
                     b.Property<int>("ConditionId")
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     b.Property<string>("StudentNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("TypeId")
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     b.HasKey("SerialNumber");
@@ -128,7 +138,8 @@ namespace DormitoryManagement.Data.Migrations
 
                     b.Property<string>("NameOfMattressType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -151,11 +162,13 @@ namespace DormitoryManagement.Data.Migrations
 
                     b.Property<string>("RoomNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("StudentNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("RegistrationId");
 
@@ -170,9 +183,11 @@ namespace DormitoryManagement.Data.Migrations
             modelBuilder.Entity("DormitoryManagement.Data.Models.Room", b =>
                 {
                     b.Property<string>("RoomNumber")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("NumberOfPlaces")
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     b.HasKey("RoomNumber");
@@ -183,25 +198,29 @@ namespace DormitoryManagement.Data.Migrations
             modelBuilder.Entity("DormitoryManagement.Data.Models.Student", b =>
                 {
                     b.Property<string>("StudentNumber")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateOnly?>("BirthDate")
                         .HasColumnType("date");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool?>("Gender")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("StudentNumber");
 
@@ -212,18 +231,22 @@ namespace DormitoryManagement.Data.Migrations
                 {
                     b.Property<int>("SerialNumber")
                         .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SerialNumber"));
 
                     b.Property<int>("ConditionId")
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     b.Property<string>("RoomNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("TypeId")
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     b.HasKey("SerialNumber");
@@ -247,7 +270,8 @@ namespace DormitoryManagement.Data.Migrations
 
                     b.Property<string>("NameOfTableType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 

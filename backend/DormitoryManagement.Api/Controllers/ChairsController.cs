@@ -18,7 +18,7 @@ namespace DormitoryManagement.Api.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Commandant,Castelian,Student")]
+        [Authorize(Roles = "Commandant,Castelian")]
         [HttpGet]
         public IActionResult GetChairs(int page = 1, int pageSize = 10)
         {
@@ -27,7 +27,6 @@ namespace DormitoryManagement.Api.Controllers
 
             var total = _context.Chairs.Count();
 
-            // Отримуємо стільці з пагінацією і вручну створюємо DTO
             var chairs = _context.Chairs
                 .OrderBy(c => c.SerialNumber)
                 .Skip((page - 1) * pageSize)
@@ -49,41 +48,85 @@ namespace DormitoryManagement.Api.Controllers
         }
 
         [Authorize(Roles = "Commandant,Castelian")]
+        [HttpGet("search")]
+        public IActionResult SearchChairs(string query, int page = 1, int pageSize = 10)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return GetChairs(page, pageSize); // If query is empty, return all chairs
+            }
+
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            // Normalize query to lowercase for case-insensitive search
+            var normalizedQuery = query.ToLower();
+
+            // Search across multiple fields
+            var chairsQuery = _context.Chairs
+                .Include(c => c.Condition)
+                .Include(c => c.Type)
+                .Where(c =>
+                    c.SerialNumber.ToString().Contains(normalizedQuery) ||
+                    c.Condition.NameOfCondition.ToLower().Contains(normalizedQuery) ||
+                    c.Type.NameOfChairType.ToLower().Contains(normalizedQuery) ||
+                    c.RoomNumber.ToLower().Contains(normalizedQuery)
+                );
+
+            var total = chairsQuery.Count();
+
+            var chairs = chairsQuery
+                .OrderBy(c => c.SerialNumber)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(c => new ChairDto
+                {
+                    SerialNumber = c.SerialNumber,
+                    Condition = c.Condition,
+                    Type = c.Type,
+                    RoomNumber = c.RoomNumber
+                })
+                .ToList();
+
+            return Ok(new
+            {
+                chairs,
+                total
+            });
+        }
+        // Решта методів (CreateChair, UpdateChair, DeleteChair) залишаються без змін
+        [Authorize(Roles = "Commandant,Castelian")]
         [HttpPost]
         public IActionResult CreateChair([FromBody] CreateChairDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Перевіряємо, чи існує Condition
             var condition = _context.Condition.Find(dto.ConditionId);
             if (condition == null)
                 return BadRequest("Invalid ConditionId");
 
-            // Перевіряємо, чи існує Type
             var type = _context.ChairTypes.Find(dto.TypeId);
             if (type == null)
                 return BadRequest("Invalid TypeId");
 
-            // Створюємо сутність Chair
             var chair = new Chair
             {
-                ConditionId = dto.ConditionId, // Встановлюємо зовнішній ключ
-                TypeId = dto.TypeId, // Встановлюємо зовнішній ключ
+                ConditionId = dto.ConditionId,
+                TypeId = dto.TypeId,
                 RoomNumber = dto.RoomNumber
             };
 
             _context.Chairs.Add(chair);
             _context.SaveChanges();
 
-            // Повертаємо DTO з повними об'єктами Condition і Type
             var chairDto = new ChairDto
             {
                 SerialNumber = chair.SerialNumber,
-                Condition = condition, // Використовуємо завантажений об'єкт
-                Type = type, // Використовуємо завантажений об'єкт
+                Condition = condition,
+                Type = type,
                 RoomNumber = chair.RoomNumber
-    };
+            };
 
             return CreatedAtAction(nameof(GetChairs), new { serialNumber = chair.SerialNumber }, chairDto);
         }
@@ -99,24 +142,20 @@ namespace DormitoryManagement.Api.Controllers
             if (chair == null)
                 return NotFound();
 
-            // Перевіряємо, чи існує Condition
             var condition = _context.Condition.Find(dto.ConditionId);
             if (condition == null)
                 return BadRequest("Invalid ConditionId");
 
-            // Перевіряємо, чи існує Type
             var type = _context.ChairTypes.Find(dto.TypeId);
             if (type == null)
                 return BadRequest("Invalid TypeId");
 
-            // Оновлюємо поля
             chair.ConditionId = dto.ConditionId;
             chair.TypeId = dto.TypeId;
             chair.RoomNumber = dto.RoomNumber;
 
             _context.SaveChanges();
 
-            // Повертаємо DTO
             var chairDto = new ChairDto
             {
                 SerialNumber = chair.SerialNumber,

@@ -1,0 +1,12 @@
+<div class="card shadow p-4 rounded-4 bg-white text-center">
+  <h2 class="mb-4">Гендерна статистика студентів</h2>
+  <div class="chart-container">
+    <canvas
+      baseChart
+      [data]="pieChartData"
+      [type]="pieChartType"
+      [options]="pieChartOptions"
+      [legend]="true"
+    ></canvas>
+  </div>
+</div>

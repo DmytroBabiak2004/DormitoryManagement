@@ -4,14 +4,16 @@ import { Chair } from '../../../models/Chair';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../dialog/cofirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
-import {ChairDialogComponent} from '../../../dialog/chair-dialog/chair-dialog.component';  // Додано
+import { ChairDialogComponent } from '../../../dialog/chair-dialog/chair-dialog.component';
 import { AuthService } from '../../../services/auth.service';
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-chair-table',
   templateUrl: './chair-table.component.html',
   styleUrls: ['../../../../styles/tables.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, FormsModule] // Додайте FormsModule
 })
 export class ChairTableComponent implements OnInit {
   data: Chair[] = [];
@@ -19,28 +21,64 @@ export class ChairTableComponent implements OnInit {
   pageSize: number = 10;
   totalItems: number = 0;
   totalPages: number = 0;
+  searchQuery: string = '';
 
-
-
-  constructor(private chairService: ChairService, private dialog: MatDialog, public authService: AuthService) {
-  }
+  constructor(
+    private chairService: ChairService,
+    private dialog: MatDialog,
+    public authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.loadChairs();
   }
 
   loadChairs(): void {
-    this.chairService.getChairs(this.currentPage, this.pageSize).subscribe(response => {
-      console.log('Server response:', response);
-      this.data = response.chairs.map(chair => ({
-        ...chair,
-        expanded: false
-      }));
-      this.totalItems = response.total ?? 0;
-      this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-    }, error => {
-      console.error('Error loading chairs:', error);
-    });
+    if (this.searchQuery) {
+      this.searchChairs();
+    } else {
+      this.chairService.getChairs(this.currentPage, this.pageSize).subscribe(
+        response => {
+          console.log('Server response:', response);
+          this.data = response.chairs.map(chair => ({
+            ...chair,
+            expanded: false
+          }));
+          this.totalItems = response.total ?? 0;
+          this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+        },
+        error => {
+          console.error('Error loading chairs:', error);
+        }
+      );
+    }
+  }
+
+  searchChairs(): void {
+    if (!this.searchQuery.trim()) {
+      this.loadChairs(); // Якщо пошуковий запит порожній, завантажуємо всі стільці
+      return;
+    }
+
+    this.chairService.searchChairs(this.searchQuery, this.currentPage, this.pageSize).subscribe(
+      response => {
+        this.data = response.chairs.map(chair => ({
+          ...chair,
+          expanded: false
+        }));
+        this.totalItems = response.total ?? 0;
+        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+      },
+      error => {
+        console.error('Error searching chairs:', error);
+      }
+    );
+  }
+
+  resetSearch(): void {
+    this.searchQuery = '';
+    this.currentPage = 1;
+    this.loadChairs();
   }
 
   previousPage(): void {
@@ -97,5 +135,4 @@ export class ChairTableComponent implements OnInit {
       if (result) this.loadChairs();
     });
   }
-
 }

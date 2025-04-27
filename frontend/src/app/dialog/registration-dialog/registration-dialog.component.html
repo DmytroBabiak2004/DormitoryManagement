@@ -1,46 +1,75 @@
 <div (click)="onCancel()" class="modal-overlay">
   <div (click)="$event.stopPropagation()" class="order-box">
-    <h1>{{ editingChair ? 'Редагувати крісло' : 'Додати нове крісло' }}</h1>
-    <p>Заповніть інформацію про крісло</p>
+    <h1>Додати нову реєстрацію</h1>
+    <p>Заповніть інформацію про реєстрацію</p>
 
-    <form (ngSubmit)="onSubmit()" [formGroup]="chairForm">
-      <!-- СТАН -->
+    <form (ngSubmit)="onSubmit()" [formGroup]="registrationForm">
+      <!-- НОМЕР СТУДЕНТА -->
       <div class="input-group">
-        <label>Стан крісла</label>
-        <select formControlName="conditionId" required>
-          <option *ngFor="let cond of conditions" [value]="cond.id">
-            {{ cond.nameOfCondition }}
-          </option>
-        </select>
-        <div *ngIf="chairForm.get('conditionId')?.invalid && chairForm.get('conditionId')?.touched">
-          <small class="error">Стан обов’язковий</small>
+        <label>Номер студента</label>
+        <input
+          formControlName="studentNumber"
+          placeholder="Номер студента (наприклад, TE12345678)"
+          required
+          type="text"
+        >
+        <div *ngIf="registrationForm.get('studentNumber')?.invalid && registrationForm.get('studentNumber')?.touched">
+          <small class="error" *ngIf="registrationForm.get('studentNumber')?.errors?.['required']">
+            Номер студента обов’язковий
+          </small>
+          <small class="error" *ngIf="registrationForm.get('studentNumber')?.errors?.['pattern']">
+            Формат: TE + 8 цифр
+          </small>
         </div>
       </div>
 
-      <!-- ТИП -->
+      <!-- НОМЕР КІМНАТИ -->
       <div class="input-group">
-        <label>Тип крісла</label>
-        <select formControlName="typeId" required>
-          <option *ngFor="let type of types" [value]="type.id">
-            {{ type.nameOfChairType }}
-          </option>
-        </select>
-        <div *ngIf="chairForm.get('typeId')?.invalid && chairForm.get('typeId')?.touched">
-          <small class="error">Тип обов’язковий</small>
+        <label>Номер кімнати</label>
+        <input
+          formControlName="roomNumber"
+          placeholder="Номер кімнати (наприклад, 101a)"
+          required
+          type="text"
+        >
+        <div *ngIf="registrationForm.get('roomNumber')?.invalid && registrationForm.get('roomNumber')?.touched">
+          <small class="error" *ngIf="registrationForm.get('roomNumber')?.errors?.['required']">
+            Номер кімнати обов’язковий
+          </small>
+          <small class="error" *ngIf="registrationForm.get('roomNumber')?.errors?.['pattern']">
+            Формат: 3 цифри + a або b
+          </small>
         </div>
       </div>
 
+      <!-- ДАТА ЗАСЕЛЕННЯ -->
       <div class="input-group">
-        <input formControlName="roomNumber" placeholder="Номер кімнати" required type="text" />
-        <div *ngIf="chairForm.get('roomNumber')?.invalid && chairForm.get('roomNumber')?.touched">
-          <small class="error">Номер кімнати обов’язковий</small>
+        <label>Дата заселення</label>
+        <input
+          formControlName="checkInDate"
+          type="date"
+          required
+        >
+        <div *ngIf="registrationForm.get('checkInDate')?.invalid && registrationForm.get('checkInDate')?.touched">
+          <small class="error" *ngIf="registrationForm.get('checkInDate')?.errors?.['required']">
+            Дата заселення обов’язкова
+          </small>
         </div>
+      </div>
+
+      <!-- ДАТА ВИСЕЛЕННЯ -->
+      <div class="input-group">
+        <label>Дата виселення (опціонально)</label>
+        <input
+          formControlName="checkOutDate"
+          type="date"
+        >
       </div>
 
       <div class="actions">
         <button (click)="onCancel()" class="cancel-btn" type="button">Скасувати</button>
-        <button [disabled]="chairForm.invalid" class="submit-btn" type="submit">
-          {{ editingChair ? 'Зберегти' : 'Додати' }}
+        <button [disabled]="registrationForm.invalid" class="submit-btn" type="submit">
+          Додати
         </button>
       </div>
     </form>

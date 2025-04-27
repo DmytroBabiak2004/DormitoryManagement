@@ -1,0 +1,48 @@
+<div class="table-container">
+  <table class="responsive-table">
+    <thead>
+    <tr>
+
+      <th>Номер кімнати</th>
+      <th>Кількість місць</th>
+      <th>Зайняті місця</th>
+      <th>Вільні місця</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of data" [class.expanded]="item.expanded">
+      <td class="name-cell" data-label="Кімната:">{{ item.roomNumber }}</td>
+      <td class="detail-cell" data-label="Місця:">{{ item.totalPlaces }}</td>
+      <td class="detail-cell" data-label="Зайняті:">{{ item.occupiedPlaces }}</td>
+      <td class="detail-cell" data-label="Вільні:">{{ item.freePlaces}}</td>
+      <td class="action-cell">
+        <button (click)="toggleDetails(item)" class="details-btn">
+          {{ item.expanded ? 'Приховати' : 'Деталі' }}
+        </button>
+    </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+<div class="pagination-container">
+  <div class="pagination-info">
+    Всього елементів: {{totalItems}}
+  </div>
+  <div class="pagination-controls">
+    <button
+      (click)="previousPage()"
+      [disabled]="currentPage === 1"
+      class="pagination-btn">
+      Попередня
+    </button>
+    <span>Сторінка {{currentPage}} з {{totalPages}}</span>
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages || totalPages === 0"
+      class="pagination-btn">
+      Наступна
+    </button>
+  </div>
+</div>
+</div>

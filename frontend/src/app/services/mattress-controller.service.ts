@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Mattress } from '../models/Mattress';
+import {Mattress, MattressDTO} from '../models/Mattress';
+import {Chair, ChairDTO} from '../models/Chair';
+import {Registration} from '../models/Registration';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MattressService {
-  private apiUrl = 'https://localhost:44344/api/Matresses';
+  private apiUrl = 'http://localhost:5073/api/Mattresses';
 
   constructor(private http: HttpClient) {}
 
@@ -24,12 +26,16 @@ export class MattressService {
     return this.http.get<{ mattresses: Mattress[], total: number }>(url, { headers: this.getAuthHeaders() });
   }
 
-  addMattress(mattress: Mattress): Observable<Mattress> {
+  searchMattresses(query: string, page: number = 1, pageSize: number = 10): Observable<{ mattresses: Mattress[], total: number }> {
+    const url = `${this.apiUrl}/search?query=${encodeURIComponent(query)}&page=${page}&pageSize=${pageSize}`;
+    return this.http.get<{ mattresses: Mattress[], total: number }>(url, { headers: this.getAuthHeaders() });
+  }
+  addMattress(mattress: MattressDTO): Observable<Mattress> {
     return this.http.post<Mattress>(this.apiUrl, mattress, { headers: this.getAuthHeaders() });
   }
 
-  updateMattress(mattress: Mattress): Observable<Mattress> {
-    const url = `${this.apiUrl}/${mattress.serialNumber}`;
+  updateMattress(mattress: MattressDTO, serialNumber: number): Observable<Mattress> {
+    const url = `${this.apiUrl}/${serialNumber}`;
     return this.http.put<Mattress>(url, mattress, { headers: this.getAuthHeaders() });
   }
 

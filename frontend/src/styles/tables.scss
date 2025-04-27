@@ -355,3 +355,270 @@ tr:hover {
   }
 
 }
+
+.custom-input {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: var(--light-gray);
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  width: 100%;
+  max-width: 300px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  color: var(--black);
+}
+
+.custom-input::placeholder {
+  color: #888;
+  font-style: italic;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  background-color: #fff;
+  box-shadow: 0 0 6px rgba(74, 122, 195, 0.3);
+}
+
+
+.search-container {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.search-input {
+  padding: 8px;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-btn, .reset-btn {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-btn:hover, .reset-btn:hover {
+  background-color: #0056b3;
+}
+
+.reset-btn {
+  background-color: #dc3545;
+}
+
+.reset-btn:hover {
+  background-color: #c82333;
+}
+
+/* Existing :root and other styles remain unchanged */
+:root {
+  --black: #000;
+  --white: #fff;
+  --blue: #4a7ac3;
+  --dark-blue: #385c9f;
+  --light-gray: #f5f5f5;
+}
+
+/* ... Existing table and button styles ... */
+
+/* Search container */
+.search-container {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap; /* Ensure buttons wrap on smaller screens */
+}
+
+/* Search input (using custom-input class) */
+.custom-input {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: var(--light-gray);
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  width: 100%;
+  max-width: 300px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  color: var(--black);
+}
+
+.custom-input::placeholder {
+  color: #888;
+  font-style: italic;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  background-color: #fff;
+  box-shadow: 0 0 6px rgba(74, 122, 195, 0.3);
+}
+
+/* Search and Reset buttons styled like other buttons */
+.search-btn, .reset-btn {
+  color: var(--white);
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.3s ease;
+}
+
+/* Specific colors for search and reset buttons */
+.search-btn {
+  background: var(--blue);
+  box-shadow: 0 2px 6px rgba(74, 112, 195, 0.3);
+}
+
+.search-btn:hover {
+  background: var(--dark-blue);
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px rgba(74, 102, 195, 0.5);
+}
+
+.reset-btn {
+  background: #d9534f; /* Matches delete-btn red */
+  box-shadow: 0 2px 6px rgba(217, 83, 79, 0.3);
+}
+
+.reset-btn:hover {
+  background: #c9302c;
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px rgba(217, 83, 79, 0.5);
+}
+
+.search-btn:active, .reset-btn:active {
+  transform: scale(0.98);
+}
+
+/* Pagination container moved below table */
+.pagination-container {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  background: var(--white);
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 10px;
+}
+
+.pagination-info {
+  font-size: 14px;
+  color: var(--black);
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap; /* Ensure buttons wrap on smaller screens */
+}
+
+.pagination-btn {
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(74, 112, 195, 0.3);
+}
+
+.pagination-btn:hover {
+  background: var(--dark-blue);
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px rgba(74, 102, 195, 0.5);
+}
+
+.pagination-btn:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.pagination-btn:active {
+  transform: scale(0.98);
+}
+
+/* Add item button */
+.add-item-btn {
+  color: var(--white);
+  background: #28a745; /* Green for add */
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+}
+
+.add-item-btn:hover {
+  background: #218838;
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px rgba(40, 167, 69, 0.5);
+}
+
+.add-item-btn:active {
+  transform: scale(0.98);
+}
+
+/* Media query for mobile devices */
+@media (max-width: 700px) {
+  .search-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .custom-input {
+    width: 100%;
+    max-width: none;
+  }
+
+  .search-btn, .reset-btn, .add-item-btn, .pagination-btn {
+    width: 100%;
+    padding: 8px;
+    font-size: 13px;
+    justify-content: center;
+  }
+
+  .pagination-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .pagination-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .pagination-info {
+    width: 100%;
+    text-align: center;
+  }
+}

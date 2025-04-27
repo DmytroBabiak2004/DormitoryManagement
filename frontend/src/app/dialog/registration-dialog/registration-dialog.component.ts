@@ -2,74 +2,66 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { ChairService } from '../../services/chair-controller.service';
-import { Chair, ChairDTO } from '../../models/Chair';
-import { NgForOf, NgIf } from '@angular/common';
+import { RegistrationService } from '../../services/registration-controller.service';
+import {Registration, RegistrationDTO} from '../../models/Registration';
+import { NgIf } from '@angular/common';
+import {ChairDTO} from '../../models/Chair';
 
 @Component({
-  selector: 'app-chair-dialog',
-  templateUrl: './chair-dialog.component.html',
+  selector: 'app-registration-dialog',
+  templateUrl: './registration-dialog.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, NgForOf],
+  imports: [ReactiveFormsModule, NgIf],
   styleUrls: ['../../../styles/dialogs.scss']
 })
-export class ChairDialogComponent implements OnInit {
-  chairForm: FormGroup;
-  editingChair: Chair | null = null;
-  conditions = [
-    { id: 1, nameOfCondition: 'New' },
-    { id: 2, nameOfCondition: 'Good' },
-    { id: 3, nameOfCondition: 'Worn' }
-  ];
-  types = [
-    { id: 1, nameOfChairType: 'Wooden' },
-    { id: 2, nameOfChairType: 'Office' },
-    { id: 3, nameOfChairType: 'Metal' }
-  ];
+export class RegistrationDialogComponent implements OnInit {
+  registrationForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<ChairDialogComponent>,
-    private chairService: ChairService
+    private dialogRef: MatDialogRef<RegistrationDialogComponent>,
+    private registrationService: RegistrationService
   ) {
-    this.chairForm = this.fb.group({
-      typeId: [null, Validators.required],
-      conditionId: [null, Validators.required],
-      roomNumber: ['', [Validators.required]]
+    this.registrationForm = this.fb.group({
+      studentNumber: ['', [
+        Validators.required,
+        Validators.pattern(/^TE\d{8}$/) // TE + 8 цифр
+      ]],
+      roomNumber: ['', [
+        Validators.required,
+        Validators.pattern(/^\d{3}[ab]$/) // 3 цифри + a або b
+      ]],
+      checkInDate: ['', Validators.required], // Обов’язкова дата заселення
+      checkOutDate: [''] // Опціональна дата виселення
     });
   }
 
   ngOnInit(): void {}
 
-  setChairForEdit(chair: Chair): void {
-    this.editingChair = chair;
-    this.chairForm.patchValue({
-      conditionId: chair.condition.id,
-      typeId: chair.type.id,
-      roomNumber: chair.roomNumber
-    });
-  }
-
   onSubmit(): void {
-    if (this.chairForm.valid) {
-      const chairData: ChairDTO = {
-        conditionId: this.chairForm.value.conditionId,
-        typeId: this.chairForm.value.typeId,
-        roomNumber: this.chairForm.value.roomNumber
+    if (this.registrationForm.valid) {
+      const registrationData: RegistrationDTO = {
+        studentNumber: this.registrationForm.value.studentNumber,
+        roomNumber: this.registrationForm.value.roomNumber,
+        checkInDate: this.registrationForm.value.checkInDate,
+        checkOutDate: this.registrationForm.value.checkOutDate || null,
+        expanded: false
       };
 
-      const request = this.editingChair
-        ? this.chairService.updateChair(chairData, this.editingChair.serialNumber)
-        : this.chairService.addChair(chairData);
+      console.log('Надсилаємо дані:', registrationData);
 
-      request.subscribe({
+      this.registrationService.addRegistration(registrationData).subscribe({
         next: (result) => {
+          console.log('Успішно:', result);
           this.dialogRef.close(result);
         },
         error: (err) => {
           console.error('Помилка:', err);
+          // this.snackBar.open(`Помилка: ${err.error?.message || 'Невідома помилка'}`, 'Закрити', { duration: 5000 });
         }
       });
+    } else {
+      console.log('Форма невалідна:', this.registrationForm.errors);
     }
   }
 

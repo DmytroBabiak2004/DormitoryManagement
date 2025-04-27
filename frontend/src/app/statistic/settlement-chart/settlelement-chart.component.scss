@@ -1,19 +1,28 @@
 .chart-container {
-  width: 300px;
-  height: 300px;
-  margin: 0 auto;
+  width: 600px; /* Фіксована ширина для великих екранів */
+  height: 400px; /* Фіксована висота */
+  margin: 0 auto; /* Центрування */
 }
 
+/* Адаптивність для планшетів */
 @media (max-width: 768px) {
   .chart-container {
-    width: 200px; /* Менший розмір для мобільних */
-    height: 200px;
+    width: 400px;
+    height: 300px;
   }
 }
 
+/* Адаптивність для мобільних */
 @media (max-width: 480px) {
   .chart-container {
-    width: 150px; /* Ще менший розмір для маленьких екранів */
-    height: 150px;
+    width: 100%; /* Повна ширина на маленьких екранах */
+    height: 250px;
   }
+}
+
+/* Додаткові стилі для картки, якщо потрібно */
+.card {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
 }

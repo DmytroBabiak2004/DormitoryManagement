@@ -1,26 +1,70 @@
 <div class="table-container">
+
+
+  <div class="search-container">
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      placeholder="Введіть студенський номер, стан, тип або номер кімнати"
+      class="search-input"
+      (keyup.enter)="searchMattresses()"
+    />
+    <button (click)="searchMattresses()" class="search-btn">Пошук</button>
+    <button *ngIf="searchQuery" (click)="resetSearch()" class="reset-btn">Скинути</button>
+  </div>
+
   <table class="responsive-table">
     <thead>
     <tr>
-      <th>Серійний номер</th>
-      <th>Стан</th>
-      <th>Тип</th>
-      <th>Номер cтуденського</th>
+      <th>Серійний номер матрацу</th>
+      <th>Стан матрацу</th>
+      <th>Тип матрацу</th>
+      <th>Номер студентського</th>
     </tr>
     </thead>
 
     <tbody>
     <tr *ngFor="let item of data" [class.expanded]="item.expanded">
       <td class="name-cell" data-label="Серійний номер:">{{ item.serialNumber}}</td>
-      <td class="detail-cell" data-label="Стан:">{{ item.condition }}</td>
-      <td class="detail-cell" data-label="Тип:">{{ item.type }}</td>
-      <td class="detail-cell" data-label="Номер кімнати:">{{ item.studentNumber}}</td>
+      <td class="detail-cell" data-label="Стан:">{{ item.condition.nameOfCondition }}</td>
+      <td class="detail-cell" data-label="Тип:">{{ item.type.nameOfMattressType  }}</td>
+      <td class="detail-cell" data-label="Номер студенського:">{{ item.studentNumber }}</td>
       <td class="action-cell">
         <button (click)="toggleDetails(item)" class="details-btn">
           {{ item.expanded ? 'Приховати' : 'Деталі' }}
         </button>
+        <button *ngIf="authService.hasRole('Commandant') || authService.hasRole('Castelian') " (click)="updateMattress(item)" class="edit-btn">Редагувати</button>
+        <button *ngIf="authService.hasRole('Commandant') || authService.hasRole('Castelian') " (click)="deleteMattress(item.serialNumber)" class="delete-btn">Видалити</button>
       </td>
     </tr>
     </tbody>
   </table>
+
+<div class="pagination-container">
+  <div class="pagination-info">
+    Всього елементів: {{totalItems}}
+  </div>
+  <div class="pagination-controls">
+    <button
+      (click)="previousPage()"
+      [disabled]="currentPage === 1"
+      class="pagination-btn">
+      Попередня
+    </button>
+    <span>Сторінка {{currentPage}} з {{totalPages}}</span>
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages || totalPages === 0"
+      class="pagination-btn">
+      Наступна
+    </button>
+    <!-- Кнопка додавання елементу -->
+    <button  *ngIf="authService.hasRole('Commandant') || authService.hasRole('Castelian') "
+             (click)="addMattress()"
+             class="add-item-btn">
+      Додати матрац
+    </button>
+  </div>
 </div>
+</div>
+

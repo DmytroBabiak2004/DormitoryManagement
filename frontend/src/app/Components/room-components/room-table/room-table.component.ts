@@ -4,14 +4,15 @@ import { Room } from '../../../models/Room';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../dialog/cofirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
-//import {RoomDialogComponent} from '../../../dialog/room-dialog/room-dialog.component';  // Додано
+import {RoomDialogComponent} from '../../../dialog/room-dialog/room-dialog.component';  // Додано
 import { AuthService } from '../../../services/auth.service';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 @Component({
   selector: 'app-room-table',
   templateUrl: './room-table.component.html',
   styleUrls: ['../../../../styles/tables.scss'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, ReactiveFormsModule, FormsModule]
 })
 export class RoomTableComponent implements OnInit {
   data: Room[] = [];
@@ -19,6 +20,7 @@ export class RoomTableComponent implements OnInit {
   pageSize: number = 10;
   totalItems: number = 0;
   totalPages: number = 0;
+  searchQuery: string = '';
 
 
   constructor(private roomService: RoomService, private dialog: MatDialog, public authService: AuthService) {
@@ -40,6 +42,33 @@ export class RoomTableComponent implements OnInit {
     }, error => {
       console.error('Error loading rooms:', error);
     });
+  }
+
+  searchRooms(): void {
+    if (!this.searchQuery.trim()) {
+      this.loadRooms(); // Якщо пошуковий запит порожній, завантажуємо всі кімнати
+      return;
+    }
+
+    this.roomService.searchRooms(this.searchQuery, this.currentPage, this.pageSize).subscribe(
+      response => {
+        this.data = response.rooms.map(room => ({
+          ...room,
+          expanded: false
+        }));
+        this.totalItems = response.total ?? 0;
+        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+      },
+      error => {
+        console.error('Error searching rooms:', error);
+      }
+    );
+  }
+
+  resetSearch(): void {
+    this.searchQuery = '';
+    this.currentPage = 1;
+    this.loadRooms();
   }
 
   previousPage(): void {
@@ -82,7 +111,7 @@ export class RoomTableComponent implements OnInit {
     });
   }
 
-/*  addRoom(): void {
+  addRoom(): void {
     const dialogRef = this.dialog.open(RoomDialogComponent);
     dialogRef.afterClosed().subscribe(result => {
       if (result) this.loadRooms();
@@ -95,6 +124,6 @@ export class RoomTableComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) this.loadRooms();
     });
-  }*/
+  }
 
 }

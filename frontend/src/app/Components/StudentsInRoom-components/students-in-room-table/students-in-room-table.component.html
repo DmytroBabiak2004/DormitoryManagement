@@ -1,0 +1,51 @@
+<div class="input-container">
+</div>
+
+<div class="table-container">
+  <table class="responsive-table">
+    <thead>
+    <tr>
+      <th>Студентський номер</th>
+      <th>Ім’я</th>
+      <th>Прізвище</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let item of data" [class.expanded]="item.expanded">
+      <td class="name-cell" data-label="Тип меблів:">{{ item.studentNumber}}</td>
+      <td class="detail-cell" data-label="Серійний номер:">{{ item.firstName }}</td>
+      <td class="detail-cell" data-label="Тип:">{{ item.lastName }}</td>
+      <td class="action-cell">
+        <button (click)="toggleDetails(item)" class="details-btn">
+          {{ item.expanded ? 'Приховати' : 'Деталі' }}
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+<div class="pagination-container">
+  <div class="pagination-info">
+    Всього елементів: {{totalItems}}
+  </div>
+  <input class="custom-input" type="text" [(ngModel)]="roomNumber" placeholder="Введіть номер кімнати" />
+  <button class="pagination-btn" (click)="searchStudentInRoom()">Завантажити студентів</button>
+  <div class="pagination-controls">
+    <button
+      (click)="previousPage()"
+      [disabled]="currentPage === 1"
+      class="pagination-btn">
+      Попередня
+    </button>
+    <span>Сторінка {{currentPage}} з {{totalPages}}</span>
+    <button
+      (click)="nextPage()"
+      [disabled]="currentPage === totalPages || totalPages === 0"
+      class="pagination-btn">
+      Наступна
+    </button>
+  </div>
+</div>
+</div>

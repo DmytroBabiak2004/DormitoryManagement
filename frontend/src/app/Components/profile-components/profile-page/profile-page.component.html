@@ -1,1 +1,19 @@
-<app-login></app-login>
+<div class="profile-container">
+  <div class="profile-box">
+    <h1>Мій профіль</h1>
+    <div *ngIf="errorMessage" class="error-message">
+      <small>{{ errorMessage }}</small>
+    </div>
+    <div *ngIf="username && role" class="profile-info">
+      <div class="info-group">
+        <label>Логін:</label>
+        <span>{{ username }}</span>
+      </div>
+      <div class="info-group">
+        <label>Роль:</label>
+        <span>{{ role }}</span>
+      </div>
+      <button class="logout-btn" (click)="logout()">Вийти</button>
+    </div>
+  </div>
+</div>

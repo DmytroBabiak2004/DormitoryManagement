@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of, BehaviorSubject, throwError } from 'rxjs';
 import { tap, catchError, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+
+// Інтерфейс для даних користувача
+export interface UserInfo {
+  username: string;
+  roles: string[];
+}
 
 // Інтерфейс для відповіді від check-session
 interface CheckSessionResponse {
@@ -10,17 +17,25 @@ interface CheckSessionResponse {
   roles: string[];
 }
 
-// Інтерфейс для відповіді від login/register (опціонально)
-interface AuthResponse {
-  token: string;
-}
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:44344/api/Auth';
+  private apiUrl = '//localhost:5073/api/Auth';
+  private userInfo = new BehaviorSubject<UserInfo | null>(null); // Зберігаємо дані користувача
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {
+    // Завантажуємо збережені дані при ініціалізації
+    const storedUser = localStorage.getItem('userInfo');
+    if (storedUser) {
+      this.userInfo.next(JSON.parse(storedUser));
+    }
+  }
+
+  // Отримання поточних даних користувача
+  getCurrentUser(): UserInfo | null {
+    return this.userInfo.value;
+  }
 
   // Вхід користувача
   login(username: string, password: string): Observable<any> {
@@ -29,14 +44,21 @@ export class AuthService {
       tap((response: any) => {
         if (response && response.token) {
           this.saveToken(response.token);
-          console.log('Токен збережено:', response.token);
+          // Зберігаємо username і roles з відповіді або токена
+          const userInfo: UserInfo = {
+            username: response.username || username,
+            roles: response.roles || this.getUserRolesFromToken(response.token)
+          };
+          this.userInfo.next(userInfo);
+          localStorage.setItem('userInfo', JSON.stringify(userInfo));
+          console.log('Токен і дані збережено:', response.token, userInfo);
         } else {
           throw new Error('Токен не отримано від сервера');
         }
       }),
-      catchError((err) => {
+      catchError((err: HttpErrorResponse) => {
         console.error('Помилка входу:', err);
-        throw err; // Перекидаємо помилку для обробки в компоненті
+        return throwError(() => new Error(err.error?.message || 'Помилка входу'));
       })
     );
   }
@@ -48,14 +70,21 @@ export class AuthService {
       tap((response: any) => {
         if (response && response.token) {
           this.saveToken(response.token);
-          console.log('Токен збережено після реєстрації:', response.token);
+          // Зберігаємо username і roles
+          const userInfo: UserInfo = {
+            username: response.username || username,
+            roles: response.roles || [role]
+          };
+          this.userInfo.next(userInfo);
+          localStorage.setItem('userInfo', JSON.stringify(userInfo));
+          console.log('Токен і дані збережено після реєстрації:', response.token, userInfo);
         } else {
           throw new Error('Токен не отримано від сервера');
         }
       }),
-      catchError((err) => {
+      catchError((err: HttpErrorResponse) => {
         console.error('Помилка реєстрації:', err);
-        throw err; // Перекидаємо помилку
+        return throwError(() => new Error(err.error?.message || 'Помилка реєстрації'));
       })
     );
   }
@@ -72,21 +101,19 @@ export class AuthService {
   // Отримання токену
   getToken(): string | null {
     const token = localStorage.getItem('token');
-    return token && token !== 'EROR' ? token : null; // Уникаємо повернення "EROR"
-  }
-
-  // Перевірка авторизації
-  isLoggedIn(): boolean {
-    const token = this.getToken();
-    return !!token; // Повертає true, якщо токен є і він валідний
+    return token && token !== 'EROR' ? token : null;
   }
 
   // Вихід із системи
   logout(): void {
+    this.userInfo.next(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
     console.log('Користувач вийшов із системи');
+    this.router.navigate(['/login']);
   }
 
+  // Перевірка сесії
   checkSession(): Observable<boolean> {
     const token = this.getToken();
     if (!token) {
@@ -99,46 +126,51 @@ export class AuthService {
     });
 
     return this.http.get<CheckSessionResponse>(`${this.apiUrl}/check-session`, { headers }).pipe(
-      map((response) => {
-        console.log('Сесія валідна:', response);
-        return !!response.username; // Повертаємо true, якщо username є
+      tap((response) => {
+        // Зберігаємо дані з check-session
+        const userInfo: UserInfo = {
+          username: response.username,
+          roles: response.roles || []
+        };
+        this.userInfo.next(userInfo);
+        localStorage.setItem('userInfo', JSON.stringify(userInfo));
+        console.log('Сесія валідна:', userInfo);
       }),
-      catchError((err) => {
+      map(() => true),
+      catchError((err: HttpErrorResponse) => {
         console.error('Помилка перевірки сесії:', err.status, err.error);
         this.logout();
         return of(false);
       })
     );
   }
-  // Отримання ролей з токена
-  getUserRoles(): string[] {
-    const token = this.getToken();
-    if (!token) return [];
 
+  // Отримання ролей з токена
+  private getUserRolesFromToken(token: string): string[] {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-
-      // Роль може зберігатись під різними ключами
       const roleClaim = payload['role'] || payload['roles'] || payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
-
-      if (!roleClaim) return [];
-
-      return Array.isArray(roleClaim) ? roleClaim : [roleClaim];
+      return roleClaim ? (Array.isArray(roleClaim) ? roleClaim : [roleClaim]) : [];
     } catch (err) {
       console.error('Помилка при декодуванні токена:', err);
       return [];
     }
   }
 
-// Чи має користувач вказану роль
+  // Отримання ролей користувача
+  getUserRoles(): string[] {
+    const userInfo = this.userInfo.value;
+    return userInfo ? userInfo.roles : [];
+  }
+
+  // Чи має користувач вказану роль
   hasRole(role: string): boolean {
     return this.getUserRoles().includes(role);
   }
 
-// Чи має хоча б одну з переданих ролей
+  // Чи має хоча б одну з переданих ролей
   hasAnyRole(roles: string[]): boolean {
     const userRoles = this.getUserRoles();
-    return roles.some(r => userRoles.includes(r));
+    return roles.some((r) => userRoles.includes(r));
   }
-
 }
