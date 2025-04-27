@@ -1,0 +1,19 @@
+.chart-container {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    width: 200px; /* Менший розмір для мобільних */
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-container {
+    width: 150px; /* Ще менший розмір для маленьких екранів */
+    height: 150px;
+  }
+}
