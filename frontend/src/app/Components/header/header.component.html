@@ -13,7 +13,7 @@
       <li class="nav-item">
         <a *ngIf="authService.hasRole('Commandant') || authService.hasRole('Castelian')" (click)="handleNavClick()" routerLink="/students" routerLinkActive="active">СТУДЕНТИ</a>
       </li>
-      <li class="nav-item">
+      <li *ngIf="authService.hasRole('Castelian') || authService.hasRole('Commandant') || authService.hasRole('Student')" class="nav-item">
         <a (click)="handleNavClick()" routerLink="/rooms" routerLinkActive="active">КІМНАТИ</a>
       </li>
       <li *ngIf="authService.hasRole('Commandant')" class="nav-item">
@@ -28,17 +28,20 @@
           <li><a (click)="handleNavClick()" routerLink="/furniture-in-room" routerLinkActive="active">Меблі у кімнатах</a></li>
         </ul>
       </li>
-      <li *ngIf="authService.hasRole('Student')" class="nav-item">
+      <li *ngIf="authService.hasRole('Castelian') || authService.hasRole('Commandant') || authService.hasRole('Student')" class="nav-item">
         <a  (click)="handleNavClick()" routerLink="/furniture-in-room" routerLinkActive="active">Меблі у кімнатах</a>
       </li>
-      <li class="nav-item">
+      <li *ngIf="authService.hasRole('Castelian') || authService.hasRole('Commandant') || authService.hasRole('Student')" class="nav-item">
         <a (click)="handleNavClick()" routerLink="/student-in-room" routerLinkActive="active">Студенти у кімнаті</a>
       </li>
-      <li class="nav-item">
+      <li *ngIf="authService.hasRole('Castelian') || authService.hasRole('Commandant') || authService.hasRole('Student')" class="nav-item">
         <a (click)="handleNavClick()" routerLink="/room-with-free-places" routerLinkActive="active">Вільні кімнати</a>
       </li>
       <li class="nav-item">
         <a (click)="handleNavClick()" routerLink="/reports" routerLinkActive="active">ЗВІТИ</a>
+      </li>
+      <li  *ngIf="authService.hasRole('Admin')" class="nav-item">
+        <a (click)="handleNavClick()" routerLink="/admin-panel" routerLinkActive="active">Панель Адміністратора</a>
       </li>
       <li class="nav-item dropdown">
         <a (click)="toggleDropdown()" class="dropdown-toggle">

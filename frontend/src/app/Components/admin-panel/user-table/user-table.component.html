@@ -1,0 +1,45 @@
+<div class="table-container">
+  <table class="responsive-table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Ім'я користувача</th>
+      <th>Роль</th> <!-- нова колонка -->
+      <th *ngIf="authService.hasRole('Admin')"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of users">
+      <td data-label="ID:">{{ user.id }}</td>
+      <td data-label="Ім'я користувача:">{{ user.userName }}</td>
+      <td data-label="Роль:">{{ user.roles[0] }}</td>
+      <td *ngIf="authService.hasRole('Admin')" class="action-cell">
+        <button (click)="deleteUser(user.id)" class="delete-btn">Видалити</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination-container">
+    <div class="pagination-info">
+      Всього користувачів: {{ totalItems }}
+    </div>
+    <div class="pagination-controls">
+      <button
+        (click)="previousPage()"
+        [disabled]="currentPage === 1"
+        class="pagination-btn"
+      >
+        Попередня
+      </button>
+      <span>Сторінка {{ currentPage }} з {{ totalPages }}</span>
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages || totalPages === 0"
+        class="pagination-btn"
+      >
+        Наступна
+      </button>
+    </div>
+  </div>
+</div>

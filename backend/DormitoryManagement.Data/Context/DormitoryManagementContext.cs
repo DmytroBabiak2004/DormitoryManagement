@@ -84,7 +84,8 @@ namespace DormitoryManagement.Data.Context
             modelBuilder.Entity<IdentityRole>().HasData(
                 new IdentityRole { Id = "1", Name = "Commandant", NormalizedName = "COMMANDANT" },
                 new IdentityRole { Id = "2", Name = "Castelian", NormalizedName = "CASTELIAN" },
-                new IdentityRole { Id = "3", Name = "Student", NormalizedName = "STUDENT" }
+                new IdentityRole { Id = "3", Name = "Student", NormalizedName = "STUDENT" },
+                new IdentityRole { Id = "4", Name = "Admin", NormalizedName = "ADMIN" }
             );
         }
     }

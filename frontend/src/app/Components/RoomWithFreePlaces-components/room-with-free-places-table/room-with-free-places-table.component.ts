@@ -3,6 +3,11 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import {RoomWithFreePlacesService} from '../../../services/RoomWithFreePlaces.service';
 import {RoomWithFreePlaces} from '../../../models/RoomWithFreePlaces';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { saveAs } from 'file-saver';
+
+
 @Component({
   selector: 'app-room-with-free-places-table',
   templateUrl: './room-with-free-places-table.component.html',
@@ -56,5 +61,32 @@ export class RoomWithFreePlacesTableComponent implements OnInit {
   toggleDetails(item: RoomWithFreePlaces): void {
     item.expanded = !item.expanded;
   }
+
+  downloadPdf(): void {
+    const doc = new jsPDF();
+
+
+    doc.text('List of the room with free places', 14, 15);
+
+    autoTable(doc, {
+      startY: 20,
+      head: [['Room number', 'Total places', 'Reserved places', 'Free places']],
+      body: this.data.map(item => [
+        item.roomNumber,
+        item.totalPlaces,
+        item.occupiedPlaces,
+        item.freePlaces
+      ])
+    });
+
+    doc.save('rooms_with_free_places.pdf');
+  }
+
+  downloadJson(): void {
+    const json = JSON.stringify(this.data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    saveAs(blob, 'rooms_with_free_places.json');
+  }
+
 
 }

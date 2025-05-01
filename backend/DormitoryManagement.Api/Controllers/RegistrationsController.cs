@@ -19,7 +19,7 @@ namespace DormitoryManagement.Api.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Commandant")]
+        [Authorize (Roles = "Commandant, Student, Castelian, Admin")]
         [HttpGet]
         public IActionResult GetRegistrations(int page = 1, int pageSize = 10)
         {
@@ -55,16 +55,15 @@ namespace DormitoryManagement.Api.Controllers
         {
             if (string.IsNullOrWhiteSpace(query))
             {
-                return GetRegistrations(page, pageSize); // If query is empty, return all registrations
+                return GetRegistrations(page, pageSize); 
             }
 
             if (page < 1) page = 1;
             if (pageSize < 1) pageSize = 10;
 
-            // Normalize query to lowercase for case-insensitive search
             var normalizedQuery = query.ToLower();
 
-            // Search across multiple fields
+           
             var registrationsQuery = _context.Registrations
                 .Where(r =>
                     r.RegistrationId.ToString().Contains(normalizedQuery) ||

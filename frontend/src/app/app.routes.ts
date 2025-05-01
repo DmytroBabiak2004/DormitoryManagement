@@ -12,6 +12,7 @@ import { AuthorizationComponent } from './Components/authorization/authorization
 import { FurnitureComponent } from './Components/FurnitureInRoom-components/furniture-in-room-page/furniture-in-room-page.component';
 import {StudentsInRoomComponent} from './Components/StudentsInRoom-components/students-in-room-page/students-in-room-page.component';
 import {RoomWithFreePlacesComponent} from './Components/RoomWithFreePlaces-components/room-with-free-places-page/room-with-free-places-page.component';
+import { AdminPanelComponent } from './Components/admin-panel/admin-panel-page/admin-panel-page.component';
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'furniture-in-room', component: FurnitureComponent, canActivate: [AuthGuard] },
   { path: 'student-in-room', component: StudentsInRoomComponent, canActivate: [AuthGuard] },
   { path: 'room-with-free-places', component: RoomWithFreePlacesComponent, canActivate: [AuthGuard] },
+  { path: 'admin-panel', component: AdminPanelComponent, canActivate: [AuthGuard] },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', redirectTo: '/home' }

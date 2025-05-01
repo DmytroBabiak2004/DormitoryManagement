@@ -16,7 +16,7 @@ namespace DormitoryManagement.Api.Controllers
         {
             _context = context;
         }
-        [Authorize(Roles = "Commandant,Castelian, Student")]
+        [Authorize(Roles = "Commandant, Castelian, Student")]
         [HttpGet("{roomNumber}")]
         public async Task<IActionResult> GetStudentsInRoom(string roomNumber, int page = 1, int pageSize = 10)
         {

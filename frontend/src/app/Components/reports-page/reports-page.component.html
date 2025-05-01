@@ -1,2 +1,16 @@
-<app-gender-chart></app-gender-chart>
-<app-settlement-chart></app-settlement-chart>
+<div class="container">
+  <h1 class="text-center my-4">Статистика гуртожитку</h1>
+  <div>
+    <button class="pagination-btn" (click)="generatePDF()">Завантажити PDF</button>
+    <button class="pagination-btn" (click)="generateJSON()">Завантажити JSON</button>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <app-gender-chart></app-gender-chart>
+    </div>
+    <div class="col-md-6">
+      <app-settlement-chart></app-settlement-chart>
+    </div>
+  </div>
+
+</div>
